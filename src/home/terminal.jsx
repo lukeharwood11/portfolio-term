@@ -1,5 +1,5 @@
 import "./home.page.css";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useId } from "react";
 
 export const SingleTerminalCommand = ({
     focus,
@@ -9,30 +9,23 @@ export const SingleTerminalCommand = ({
     value,
     onSubmit,
 }) => {
+    const id = useId();
     const [caretPos, setCaretPos] = useState(0);
-    const caretPosRef = useRef(caretPos);
-    const valueRef = useRef(value);
     const ref = useRef();
     const terminalInputRef = useRef();
 
     function handleAdd(key) {
         onChange(
-            valueRef.current.substring(0, caretPosRef.current) +
+            value.substring(0, caretPos) +
                 key +
-                valueRef.current.substring(
-                    caretPosRef.current,
-                    valueRef.current.length
-                )
+                value.substring(caretPos, value.length)
         );
     }
 
     function handleRemove() {
         onChange(
-            valueRef.current.substring(0, caretPosRef.current - 1) +
-                valueRef.current.substring(
-                    caretPosRef.current,
-                    valueRef.current.length
-                )
+            value.substring(0, caretPos - 1) +
+                value.substring(caretPos, value.length)
         );
     }
 
@@ -42,7 +35,6 @@ export const SingleTerminalCommand = ({
         if (!focus) {
             return;
         }
-        console.log(valueRef.current);
         switch (e.key) {
             case "ArrowUp":
                 onPreviousCommand();
@@ -51,19 +43,19 @@ export const SingleTerminalCommand = ({
                 onNextCommand();
                 break;
             case "ArrowLeft":
-                if (caretPosRef.current > 0) {
-                    setCaretPos((prev) => prev - 1);
+                if (caretPos > 0) {
+                    setCaretPos(caretPos - 1);
                 }
                 break;
             case "ArrowRight":
-                if (caretPosRef.current < valueRef.current.length) {
-                    setCaretPos((prev) => prev + 1);
+                if (caretPos < value.length) {
+                    setCaretPos(caretPos + 1);
                 }
                 break;
             case "Backspace":
-                if (caretPosRef.current > 0) {
+                if (caretPos > 0) {
                     handleRemove();
-                    setCaretPos((prev) => prev - 1);
+                    setCaretPos(caretPos - 1);
                 }
                 break;
             case "Enter":
@@ -86,6 +78,11 @@ export const SingleTerminalCommand = ({
     }
 
     useEffect(() => {
+        // on mount, scroll into view
+        ref.current.scrollIntoView();
+    }, []);
+
+    useEffect(() => {
         let html = escapeHTML(value);
         const valueAtCaret =
             caretPos < html.length && html[caretPos] !== " "
@@ -99,28 +96,15 @@ export const SingleTerminalCommand = ({
             html.substring(caretPos + 1, html.length);
         terminalInputRef.current.innerHTML = focus ? text : value;
         // add cursor at correct location
-
-        // this is necessary because we are using hooks within an event listener (this is a dumb workaround)
-        caretPosRef.current = caretPos;
-        valueRef.current = value;
-    }, [caretPos, value]);
+    }, [caretPos, value, focus]);
 
     useEffect(() => {
-        ref.current.scrollIntoView();
-        if (focus) {
-            document.addEventListener("keydown", handleKeyDown);
-        } else {
-            document.removeEventListener("keydown", handleKeyDown);
-        }
-
-        // to be safe, ensure that the event listener is removed when the component dismounts
-        return () => {
-            document.removeEventListener("keydown", handleKeyDown);
-        };
-    });
+        document.addEventListener("keydown", handleKeyDown);
+        return () => document.removeEventListener("keydown", handleKeyDown);
+    }, [handleKeyDown, value, caretPos]);
 
     return (
-        <div ref={ref}>
+        <div onKeyDown={() => handleKeyDown()} key={id} ref={ref}>
             <div className="terminal-command">
                 <span className="command-prefix">
                     <span className="user">guest@lukes-portfolio:</span>
@@ -135,32 +119,25 @@ export const SingleTerminalCommand = ({
 };
 
 export const Terminal = () => {
-    const [buffer, setBuffer] = useState("");
-    const bufferRef = useRef(buffer);
-    const [commandBuffer, setCommandBuffer] = useState([]);
+    const [commandBuffer, setCommandBuffer] = useState([""]);
 
-    const [cbIndex, setCbIndex] = useState(-1); // -1 is the current buffer
-    const cbIndexRef = useRef(cbIndex);
+    const [cbIndex, setCbIndex] = useState(1); // 1 is the current buffer (Since length - 1 is the last command)
 
     function handleNextCommand() {
-        console.log("HandleNextCommand", cbIndexRef.current);
-        if (cbIndexRef.current > 0) {
+        if (cbIndex > 2) {
             setCbIndex((prev) => {
-                setBuffer(commandBuffer[commandBuffer.length - prev]);
+                handleChange(commandBuffer[commandBuffer.length - (prev - 1)]);
                 return prev - 1;
             });
-        } else if (cbIndexRef.current === 0) {
-            setCbIndex(-1);
-            setBuffer("");
+        } else if (cbIndex === 2) {
+            setCbIndex(1);
+            handleChange("");
         }
     }
     function handlePreviousCommand() {
-        console.log("HandlePreviousCommand", cbIndexRef.current);
-        console.log(cbIndexRef.current, commandBuffer.length - 1);
-        if (cbIndexRef.current < commandBuffer.length - 1) {
+        if (cbIndex < commandBuffer.length) {
             setCbIndex((prev) => {
-                setBuffer(commandBuffer[commandBuffer.length - (prev + 2)]);
-                console.log(prev + 1);
+                handleChange(commandBuffer[commandBuffer.length - (prev + 1)]);
                 return prev + 1;
             });
         }
@@ -168,36 +145,37 @@ export const Terminal = () => {
 
     function handleSubmitCommand() {
         setCommandBuffer((prev) => {
-            console.log("buffer", bufferRef.current);
-            let cp = [...prev, bufferRef.current];
-            console.log("command buffer", cp);
-            setBuffer("");
-            setCbIndex(-1);
+            let cp = [...prev];
+            cp.push("");
+            // reset the 'previous commands' feature
+            setCbIndex(1);
             return cp;
         });
         // TODO: add the commmand to the visible buffer
         // TODO: use the bash engine to run the command and set the command output
     }
 
-    useEffect(() => {
-        console.log("Sanity check", buffer);
-        bufferRef.current = buffer;
-        cbIndexRef.current = cbIndex;
-    }, [buffer, cbIndex]);
+    function handleChange(newValue) {
+        setCommandBuffer((prev) => {
+            const cp = [...prev];
+            cp[commandBuffer.length - 1] = newValue;
+            return cp;
+        });
+    }
 
     return (
         <div className="terminal">
             {commandBuffer.map((c, i) => (
-                <SingleTerminalCommand key={i} value={c} />
+                <SingleTerminalCommand
+                    key={i}
+                    onChange={handleChange}
+                    value={c}
+                    focus={i === commandBuffer.length - 1}
+                    onPreviousCommand={handlePreviousCommand}
+                    onNextCommand={handleNextCommand}
+                    onSubmit={handleSubmitCommand}
+                />
             ))}
-            <SingleTerminalCommand
-                onChange={(value) => setBuffer(value)}
-                value={buffer}
-                focus
-                onPreviousCommand={handlePreviousCommand}
-                onNextCommand={handleNextCommand}
-                onSubmit={handleSubmitCommand}
-            />
         </div>
     );
 };
