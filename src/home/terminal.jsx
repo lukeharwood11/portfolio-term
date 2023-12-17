@@ -7,10 +7,12 @@ export const SingleTerminalCommand = ({
     onNextCommand,
     onChange,
     value,
+    onSubmit,
 }) => {
     const [caretPos, setCaretPos] = useState(0);
     const caretPosRef = useRef(caretPos);
     const valueRef = useRef(value);
+    const ref = useRef();
     const terminalInputRef = useRef();
 
     function handleAdd(key) {
@@ -35,10 +37,12 @@ export const SingleTerminalCommand = ({
     }
 
     const handleKeyDown = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
         if (!focus) {
             return;
         }
-        console.log(e.key, caretPosRef.current);
+        console.log(valueRef.current);
         switch (e.key) {
             case "ArrowUp":
                 onPreviousCommand();
@@ -48,13 +52,11 @@ export const SingleTerminalCommand = ({
                 break;
             case "ArrowLeft":
                 if (caretPosRef.current > 0) {
-                    console.log("Inside");
                     setCaretPos((prev) => prev - 1);
                 }
                 break;
             case "ArrowRight":
                 if (caretPosRef.current < valueRef.current.length) {
-                    console.log("inside", value);
                     setCaretPos((prev) => prev + 1);
                 }
                 break;
@@ -64,9 +66,11 @@ export const SingleTerminalCommand = ({
                     setCaretPos((prev) => prev - 1);
                 }
                 break;
+            case "Enter":
+                onSubmit();
+                break;
             default:
                 if (e.key.length === 1 && !e.ctrlKey && !e.altKey) {
-                    console.log(e.key);
                     handleAdd(e.key);
                     setCaretPos((prev) => prev + 1);
                 }
@@ -84,7 +88,7 @@ export const SingleTerminalCommand = ({
     useEffect(() => {
         let html = escapeHTML(value);
         const valueAtCaret =
-            caretPos < html.length && html[caretPos + 1] !== " "
+            caretPos < html.length && html[caretPos] !== " "
                 ? html[caretPos]
                 : "&nbsp;";
         let text =
@@ -93,7 +97,7 @@ export const SingleTerminalCommand = ({
             valueAtCaret +
             "</span>" +
             html.substring(caretPos + 1, html.length);
-        terminalInputRef.current.innerHTML = text;
+        terminalInputRef.current.innerHTML = focus ? text : value;
         // add cursor at correct location
 
         // this is necessary because we are using hooks within an event listener (this is a dumb workaround)
@@ -102,15 +106,21 @@ export const SingleTerminalCommand = ({
     }, [caretPos, value]);
 
     useEffect(() => {
-        console.log("Adding window listener");
-        document.addEventListener("keydown", handleKeyDown);
+        ref.current.scrollIntoView();
+        if (focus) {
+            document.addEventListener("keydown", handleKeyDown);
+        } else {
+            document.removeEventListener("keydown", handleKeyDown);
+        }
+
+        // to be safe, ensure that the event listener is removed when the component dismounts
         return () => {
             document.removeEventListener("keydown", handleKeyDown);
         };
-    }, []);
+    });
 
     return (
-        <div>
+        <div ref={ref}>
             <div className="terminal-command">
                 <span className="command-prefix">
                     <span className="user">guest@lukes-portfolio:</span>
@@ -126,27 +136,31 @@ export const SingleTerminalCommand = ({
 
 export const Terminal = () => {
     const [buffer, setBuffer] = useState("");
+    const bufferRef = useRef(buffer);
     const [commandBuffer, setCommandBuffer] = useState([]);
 
     const [cbIndex, setCbIndex] = useState(-1); // -1 is the current buffer
+    const cbIndexRef = useRef(cbIndex);
 
     function handleNextCommand() {
-        console.log("HandleNextCommand", cbIndex);
-        if (cbIndex > 0) {
+        console.log("HandleNextCommand", cbIndexRef.current);
+        if (cbIndexRef.current > 0) {
             setCbIndex((prev) => {
-                setBuffer(commandBuffer(commandBuffer.length - (prev - 1)));
+                setBuffer(commandBuffer[commandBuffer.length - prev]);
                 return prev - 1;
             });
-        } else if (cbIndex === 0) {
+        } else if (cbIndexRef.current === 0) {
             setCbIndex(-1);
             setBuffer("");
         }
     }
     function handlePreviousCommand() {
-        console.log("HandlePreviousCommand", cbIndex);
-        if (cbIndex < commandBuffer.length - 1) {
+        console.log("HandlePreviousCommand", cbIndexRef.current);
+        console.log(cbIndexRef.current, commandBuffer.length - 1);
+        if (cbIndexRef.current < commandBuffer.length - 1) {
             setCbIndex((prev) => {
-                setBuffer(commandBuffer(commandBuffer.length - (prev + 1)));
+                setBuffer(commandBuffer[commandBuffer.length - (prev + 2)]);
+                console.log(prev + 1);
                 return prev + 1;
             });
         }
@@ -154,15 +168,28 @@ export const Terminal = () => {
 
     function handleSubmitCommand() {
         setCommandBuffer((prev) => {
-            let cp = [...prev, buffer];
+            console.log("buffer", bufferRef.current);
+            let cp = [...prev, bufferRef.current];
+            console.log("command buffer", cp);
+            setBuffer("");
+            setCbIndex(-1);
             return cp;
         });
-        setBuffer("");
         // TODO: add the commmand to the visible buffer
         // TODO: use the bash engine to run the command and set the command output
     }
+
+    useEffect(() => {
+        console.log("Sanity check", buffer);
+        bufferRef.current = buffer;
+        cbIndexRef.current = cbIndex;
+    }, [buffer, cbIndex]);
+
     return (
         <div className="terminal">
+            {commandBuffer.map((c, i) => (
+                <SingleTerminalCommand key={i} value={c} />
+            ))}
             <SingleTerminalCommand
                 onChange={(value) => setBuffer(value)}
                 value={buffer}

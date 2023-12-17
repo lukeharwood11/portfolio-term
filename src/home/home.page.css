@@ -1,47 +1,50 @@
 .home-page {
-	height: 100%;
+    height: 100%;
 }
 .terminal {
-	width: 100%;
-	height: 100%;
-	background-color: rgb(50, 50, 70);
-	padding: 0.5rem;
-	box-sizing: border-box;
-	cursor: default;
+    width: 100%;
+    height: 100%;
+    background-color: rgb(50, 50, 70);
+    padding: 0.5rem;
+    box-sizing: border-box;
+    cursor: default;
+    overflow-x: none;
+    overflow-y: auto;
 }
 
 .terminal-command {
-	display: flex;
-	align-items: center;
+    display: flex;
+    align-items: center;
 }
 
 .terminal-input {
-	position: relative;
-	margin-left: 0.5rem;
-	height: 1.5rem;
-	color: white;
+    position: relative;
+    margin-left: 0.5rem;
+    height: 1.5rem;
+    color: white;
+    white-space: pre;
 }
 
 .terminal-input > span {
-	background-color: rgb(255, 255, 255, 0.9);
-	color: black;
+    background-color: rgb(255, 255, 255, 0.9);
+    color: black;
 }
 
 .user {
-	color: rgb(10, 150, 30);
+    color: rgb(10, 150, 30);
 }
 
 .cwd {
-	color: rgb(0, 150, 200);
+    color: rgb(0, 150, 200);
 }
 
 .white {
-	color: white;
-	margin-left: 1px;
-	font-weight: 200;
+    color: white;
+    margin-left: 1px;
+    font-weight: 200;
 }
 
 .command-output {
-	color: white;
-	white-space: pre-wrap;
+    color: white;
+    white-space: pre-wrap;
 }
