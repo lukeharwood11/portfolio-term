@@ -1,0 +1,40 @@
+import "./home.page.css";
+import { useState, useEffect, useRef } from "react";
+
+export const SingleTerminalCommand = ({ focus }) => {
+  const caretRef = useRef();
+  const contentRef = useRef();
+
+  const setCaret = () => {};
+
+  useEffect(() => {}, []);
+
+  return (
+    <div>
+      <div className="terminal-command">
+        <span className="command-prefix">
+          <span className="user">guest@lukes-portfolio:</span>
+          <span className="cwd">~</span>
+          <span className="white">$</span>
+        </span>
+        <div className="terminal-input">
+          <div ref={caretRef} className="terminal-caret"></div>
+          <div
+            ref={contentRef}
+            className="terminal-contents"
+            contentEditable
+          ></div>
+        </div>
+      </div>
+      <div className="command-output"></div>
+    </div>
+  );
+};
+
+export const Terminal = () => {
+  return (
+    <div className="terminal">
+      <SingleTerminalCommand></SingleTerminalCommand>
+    </div>
+  );
+};
