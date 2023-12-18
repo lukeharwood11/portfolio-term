@@ -1,6 +1,6 @@
 export class System {
-    constructor(fs) {
+    constructor(fs, env) {
         this.fs = fs;
-        this.env = {};
+        this.env = env;
     }
 }
