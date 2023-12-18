@@ -1,5 +1,6 @@
 import "./home.page.css";
 import { useState, useEffect, useRef, useId } from "react";
+import Markdown from "react-markdown";
 
 export const SingleTerminalCommand = ({
     focus,
@@ -120,7 +121,7 @@ export const SingleTerminalCommand = ({
                 </span>
                 <div ref={terminalInputRef} className="terminal-input"></div>
             </div>
-            <div className="command-output">{output}</div>
+            <Markdown>{output}</Markdown>
         </div>
     );
 };

@@ -9,6 +9,7 @@ import {
     MdClose,
 } from "react-icons/md";
 import { SingleTerminalCommand } from "./command-component";
+import { system } from "../system/init";
 
 const NavBar = () => {
     return (
@@ -89,7 +90,8 @@ export const Terminal = () => {
             let cp = [...prev];
             const tokenRes = tokenize(cp[cp.length - 1].cmd);
             // TODO: remove
-            cp[cp.length - 1].output = tokenRes.error || tokenRes.tokens;
+            cp[cp.length - 1].output =
+                tokenRes.error || JSON.stringify(tokenRes.tokens);
             // execute command, when done add another command, set the cbIndex to 1 and continue
             cp.push(new Command(cwd));
             // reset the 'previous commands' feature
