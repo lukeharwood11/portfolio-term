@@ -1,4 +1,3 @@
-import parser from "https://unpkg.com/yargs-parser@19.0.0/browser.js";
 import { FileSystem } from "./filesystem";
 export class Parser {
     static isFlag(token) {
@@ -55,12 +54,66 @@ export class Command {
     }
 
     parse(cmd) {
-        let { _: args, ...kwargs } = parser(cmd);
+        let { args, kwargs } = parseFlags(cmd);
         this.args = args;
         this.kwargs = kwargs;
     }
 
     execute(system) {}
+}
+
+function insertIntoObject(obj, key, value) {
+    const existingValue = obj[key];
+    if (existingValue) {
+        if (existingValue instanceof Array) {
+            existingValue.push(value);
+        } else {
+            const newArray = [existingValue, value];
+            obj[key] = newArray;
+        }
+    } else {
+        obj[key] = value;
+    }
+}
+
+export function parseFlags(tokens) {
+    const flagReg = /--([a-zA-Z]+)|-([a-zA-Z]+)/;
+    const kwargs = {};
+    const args = [];
+    const seen = new Set([]);
+    for (let i = 0; i < tokens.length; ++i) {
+        if (seen.has(i)) {
+            continue;
+        }
+        const token = tokens[i];
+        const regexResult = flagReg.exec(token);
+        if (regexResult === null) {
+            args.push(token);
+        } else {
+            // true if it is the last value or if the next value is a flag, otherwise it's the value of the next token
+            let value;
+            if (i === tokens.length - 1 || flagReg.test(tokens[i + 1])) {
+                value = true;
+            } else {
+                value = tokens[i + 1];
+                seen.add(i + 1);
+            }
+            // for both cases, if the value already exists in the result, change to list and append
+            if (regexResult[1] !== undefined) {
+                // does value exist?
+                insertIntoObject(kwargs, regexResult[1], value);
+            } else if (regexResult[2] !== undefined) {
+                // parse through each character in the flag
+                for (let c = 0; c < regexResult[2].length; ++c) {
+                    insertIntoObject(kwargs, regexResult[2][c], value);
+                }
+            }
+        }
+    }
+    return {
+        args,
+        kwargs,
+    };
 }
 
 // will need this for first parsing
@@ -90,7 +143,5 @@ export function tokenize(cmd) {
     } else if (buffer.trim() !== "") {
         res.add(buffer);
     }
-    console.log(res);
-    console.log(res.tokens);
     return res;
 }

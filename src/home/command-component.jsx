@@ -121,7 +121,7 @@ export const SingleTerminalCommand = ({
                 </span>
                 <div ref={terminalInputRef} className="terminal-input"></div>
             </div>
-            <Markdown>{output}</Markdown>
+            <Markdown className="terminal-output">{output}</Markdown>
         </div>
     );
 };

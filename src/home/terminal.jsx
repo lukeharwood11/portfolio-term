@@ -1,6 +1,6 @@
 import "./home.page.css";
 import { useState } from "react";
-import { tokenize } from "../system/bash";
+import { tokenize, parseFlags } from "../system/bash";
 import {
     MdOutlineTerminal,
     MdOutlineSearch,
@@ -91,7 +91,7 @@ export const Terminal = () => {
             const tokenRes = tokenize(cp[cp.length - 1].cmd);
             // TODO: remove
             cp[cp.length - 1].output =
-                tokenRes.error || JSON.stringify(tokenRes.tokens);
+                tokenRes.error || JSON.stringify(parseFlags(tokenRes.tokens));
             // execute command, when done add another command, set the cbIndex to 1 and continue
             cp.push(new Command(cwd));
             // reset the 'previous commands' feature

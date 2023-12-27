@@ -30,6 +30,10 @@
     color: black;
 }
 
+.terminal-output {
+    color: white;
+}
+
 .user {
     color: rgb(10, 150, 30);
 }
