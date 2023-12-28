@@ -1,3 +1,4 @@
+import { CdCommand } from "./cmds/cd";
 import { FileSystem, Directory, File } from "./filesystem";
 import { System } from "./system";
 
@@ -32,6 +33,6 @@ const defaultEnvVariables = {
     HOME: "/home",
 };
 
-const commands = [];
+const commands = [new CdCommand()];
 
 export const system = new System(fs, commands, defaultEnvVariables);

@@ -1,9 +1,4 @@
 import { FileSystem } from "./filesystem";
-export class Parser {
-    static isFlag(token) {
-        return token.s;
-    }
-}
 
 export class Tokens {
     constructor(raw) {
@@ -17,8 +12,15 @@ export class Tokens {
     }
 }
 
+export const ResultStatus = {
+    // https://www.geeksforgeeks.org/how-to-use-exit-code-to-read-from-terminal-from-script-and-with-logical-operators/
+    SUCCESS: 0,
+    ERROR: 1,
+    IMPROPER_COMMAND: 2,
+};
+
 export class Result {
-    constructor(out, status) {
+    constructor(out = "", status = ResultStatus.SUCCESS) {
         this.out = out;
         this.status = status;
     }
@@ -40,11 +42,12 @@ export class Arg {
 }
 
 export class Command {
-    constructor(name, flags, args, help) {
+    constructor(name, flags, args, help, alt = undefined) {
+        this.name = name;
         this.flags = flags;
         this.args = args;
         this.help = help;
-        this.name = name;
+        this.alt = alt;
         this.args = [];
         this.kwargs = {};
     }
@@ -53,13 +56,7 @@ export class Command {
         return `${this.name}`;
     }
 
-    parse(cmd) {
-        let { args, kwargs } = parseFlags(cmd);
-        this.args = args;
-        this.kwargs = kwargs;
-    }
-
-    execute(system) {}
+    execute(args, kwargs, connection) {}
 }
 
 function insertIntoObject(obj, key, value) {

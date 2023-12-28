@@ -10,6 +10,7 @@ import {
 } from "react-icons/md";
 import { SingleTerminalCommand } from "./command-component";
 import { system } from "../system/init";
+import { SystemConnection } from "../system/system";
 
 const NavBar = () => {
     return (
@@ -57,6 +58,7 @@ export const Terminal = () => {
     // the location
     const [commandBuffer, setCommandBuffer] = useState([new Command("~")]);
     const [cwd, setCwd] = useState("~");
+    const [connection, setConnection] = useState(new SystemConnection(system));
 
     const [cbIndex, setCbIndex] = useState(1); // 1 is the current buffer (Since length - 1 is the last command)
     const [blocked, setBlocked] = useState(false); // blocked meaning a command or process is not detatched
@@ -88,10 +90,18 @@ export const Terminal = () => {
     function handleSubmitCommand() {
         setCommandBuffer((prev) => {
             let cp = [...prev];
-            const tokenRes = tokenize(cp[cp.length - 1].cmd);
+            const stdOut = (buffer) => {
+                cp[cp.length - 1].output += `${buffer}\n\n`;
+            };
+            const result = connection.execute(
+                cp[cp.length - 1].cmd,
+                stdOut,
+                cwd,
+                setCwd
+            );
+
+            stdOut(result.out);
             // TODO: remove
-            cp[cp.length - 1].output =
-                tokenRes.error || JSON.stringify(parseFlags(tokenRes.tokens));
             // execute command, when done add another command, set the cbIndex to 1 and continue
             cp.push(new Command(cwd));
             // reset the 'previous commands' feature

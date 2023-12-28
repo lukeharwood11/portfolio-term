@@ -23,7 +23,6 @@ export class Directory extends Item {
     addItems(items) {
         for (let i = 0; i < items.length; ++i) {
             const item = items[i];
-            console.log(item);
             item.parentDir = this;
             this.items.push(item);
         }
