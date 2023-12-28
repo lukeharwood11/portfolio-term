@@ -90,6 +90,7 @@ export const Terminal = () => {
     function handleSubmitCommand() {
         setCommandBuffer((prev) => {
             let cp = [...prev];
+            // TODO: move stdOut outside of updating state so that any stdOut(s) don't get 'flushed' at the end of the command.
             const stdOut = (buffer) => {
                 cp[cp.length - 1].output += `${buffer}\n\n`;
             };
