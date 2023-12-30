@@ -29,7 +29,7 @@ export class System {
     execute(cmd, connection) {
         const tokenResult = tokenize(cmd);
         if (tokenResult.error) {
-            return Result(tokens.error, ResultStatus.ERROR);
+            return new Result(tokens.error, ResultStatus.ERROR);
         }
         const tokens = tokenResult.tokens;
         const { args, kwargs } = parseFlags(tokens);
@@ -38,7 +38,7 @@ export class System {
         console.table(kwargs);
         // find command
         if (tokens.length === 0) {
-            return Result();
+            return new Result();
         }
 
         const userCmd = tokens[0];
