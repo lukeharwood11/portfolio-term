@@ -3,7 +3,7 @@ import { FileSystem, Directory, File } from "./filesystem";
 import { System } from "./system";
 
 // configure our fake system
-const rootDir = new Directory("root");
+const rootDir = new Directory("");
 
 // https://www.geeksforgeeks.org/linux-directory-structure/
 // /bin	 binary or executable programs.
@@ -15,7 +15,9 @@ const rootDir = new Directory("root");
 // /var 	log files.
 
 const homeDir = new Directory("home");
-homeDir.addItems([new Directory("testDir"), new File("testFile")]);
+const userDir = new Directory("guest");
+homeDir.addItems([userDir]);
+userDir.addItems([new Directory("test")]);
 
 rootDir.addItems([
     new Directory("bin"),
@@ -27,10 +29,16 @@ rootDir.addItems([
     new Directory("var"),
 ]);
 
-const fs = new FileSystem(rootDir, homeDir);
+console.log(userDir.getAbsolutePath());
+
+const fs = new FileSystem(rootDir, userDir);
+
+console.log(fs.simplifyPath("/home/guest/test/"));
+
+// console.log(rootDir.getAbsolutePath());
 
 const defaultEnvVariables = {
-    HOME: "/home",
+    HOME: "~",
 };
 
 const commands = [new CdCommand()];

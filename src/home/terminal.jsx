@@ -1,5 +1,5 @@
 import "./home.page.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { tokenize, parseFlags } from "../system/bash";
 import {
     MdOutlineTerminal,
@@ -12,7 +12,7 @@ import { SingleTerminalCommand } from "./command-component";
 import { system } from "../system/init";
 import { SystemConnection } from "../system/system";
 
-const NavBar = () => {
+const NavBar = ({ cwd }) => {
     return (
         <div className="nav-bar">
             <div className="left-command-bar">
@@ -20,7 +20,7 @@ const NavBar = () => {
                     <MdOutlineTerminal size={25} />
                 </button>
             </div>
-            <div className="middle-bar">guest@lukes-portfolio: ~</div>
+            <div className="middle-bar">guest@lukes-portfolio: {cwd}</div>
             <div className="right-command-bar">
                 <button className="cmd-btn">
                     <MdOutlineSearch size={25} />
@@ -87,6 +87,10 @@ export const Terminal = () => {
         }
     }
 
+    useEffect(() => {
+        console.log("CWD Changing:", cwd);
+    }, [cwd]);
+
     function handleSubmitCommand() {
         setCommandBuffer((prev) => {
             let cp = [...prev];
@@ -123,13 +127,13 @@ export const Terminal = () => {
 
     return (
         <div className="terminal">
-            <NavBar />
+            <NavBar cwd={cwd} />
             <div>
                 {commandBuffer.map((c, i) => (
                     <SingleTerminalCommand
                         key={i}
                         onChange={handleChange}
-                        cwd={c.location}
+                        cwd={cwd}
                         value={c.cmd}
                         output={c.output}
                         focus={i === commandBuffer.length - 1}

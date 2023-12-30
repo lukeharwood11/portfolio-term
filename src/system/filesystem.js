@@ -5,6 +5,19 @@ export class Item {
         this.permissions = [];
         this.parentDir = undefined;
     }
+
+    getAbsolutePath() {
+        let path = this.name;
+        if (this.parentDir === undefined) {
+            return "/";
+        }
+        let curNode = this.parentDir;
+        while (curNode !== undefined) {
+            path = `${curNode.parentDir ? curNode.name : ""}/${path}`;
+            curNode = curNode.parentDir;
+        }
+        return path;
+    }
 }
 
 export class File extends Item {
@@ -35,22 +48,36 @@ export class FileSystem {
         this.homeDir = homeDir;
     }
 
+    simplifyPath(path) {
+        const homeAbsolute = this.homeDir.getAbsolutePath();
+        if (path.startsWith(homeAbsolute)) {
+            return `~` + path.substring(homeAbsolute.length);
+        }
+        return path;
+    }
+
     /**
      * @param {Array} pathLs
      * @param {boolean} absolute (default = true)
      * @returns {undefined | Item}
      */
-    getNode(startingNode, pathLs) {
+    resolve(startingNode, pathLs) {
         let node = startingNode;
+        console.table({ startingNode, pathLs });
         for (let i = 0; i < pathLs.length; ++i) {
             // search for next node
             const cur = pathLs[i];
             let nextNode;
-            for (let j = 0; j < node.items.length; ++j) {
-                const n = node.items[j];
-                if (n.name === cur) {
-                    nextNode = n;
-                    break;
+            if (cur === ".." || cur === ".") {
+                nextNode =
+                    node.parentDir && cur === ".." ? node.parentDir : node;
+            } else {
+                for (let j = 0; j < node.items.length; ++j) {
+                    const n = node.items[j];
+                    if (n.name === cur) {
+                        nextNode = n;
+                        break;
+                    }
                 }
             }
             // if the next node doesn't exist or the next node is not a directory (and it isn't the final node)
@@ -66,8 +93,10 @@ export class FileSystem {
         return node;
     }
 
-    resolve(cwd, path) {
+    getItem(cwd, path) {
         // given a path return an Item that is mounted in the file system
+        cwd = this.simplifyPath(cwd);
+        console.table({ cwd, path });
         const splitPath = path.split("/");
         let startingNode;
         if (splitPath[0] === "") {
@@ -82,11 +111,10 @@ export class FileSystem {
             if (splitPath[0] === ".") {
                 splitPath.shift();
             }
-            // start from the current working directory
-            // TODO: fixme, the following won't work since if the cwd is "~" it will resolve to '/~/'
-            startingNode = this.getNode(cwd.split("/"), this.rootDir);
+            startingNode = this.getItem("", cwd);
         }
-        console.log(splitPath);
-        console.log(startingNode);
+        return splitPath.length === 0 || !splitPath[0]
+            ? startingNode
+            : this.resolve(startingNode, splitPath);
     }
 }

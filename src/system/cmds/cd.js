@@ -21,6 +21,8 @@ export class CdCommand extends Command {
     }
 
     execute(args, _, connection) {
+        // for consistency, ensure we're always using relative paths
+        const cwd = connection.system.fs.simplifyPath(connection.cwd);
         if (args.length > 2) {
             return new Result(
                 "Too many arguments",
@@ -28,11 +30,20 @@ export class CdCommand extends Command {
             );
         }
         const pathInput = args.length == 2 ? args[1] : "~"; // default to $HOME
-        const absolutePath = connection.system.fs.resolve(
-            connection.cwd,
-            pathInput
-        );
-        console.table({ pathInput, absolutePath });
+        const item = connection.system.fs.getItem(cwd, pathInput);
+
+        console.table({ pathInput, item });
+        // set the cwd
+        if (item) {
+            connection.setCwd(
+                connection.system.fs.simplifyPath(item.getAbsolutePath())
+            );
+        } else {
+            return new Result(
+                `bash: cd: ${pathInput}: No such file or directory`,
+                ResultStatus.IMPROPER_COMMAND
+            );
+        }
         return new Result();
     }
 }
