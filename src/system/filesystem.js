@@ -108,9 +108,6 @@ export class FileSystem {
             splitPath.shift();
             startingNode = this.homeDir;
         } else {
-            if (splitPath[0] === ".") {
-                splitPath.shift();
-            }
             startingNode = this.getItem("", cwd);
         }
         return splitPath.length === 0 || !splitPath[0]

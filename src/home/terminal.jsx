@@ -57,7 +57,6 @@ export const Terminal = () => {
     // the output
     // the location
     const [commandBuffer, setCommandBuffer] = useState([new Command("~")]);
-    const [cwd, setCwd] = useState("~");
     const [connection, setConnection] = useState(new SystemConnection(system));
 
     const [cbIndex, setCbIndex] = useState(1); // 1 is the current buffer (Since length - 1 is the last command)
@@ -87,10 +86,6 @@ export const Terminal = () => {
         }
     }
 
-    useEffect(() => {
-        console.log("CWD Changing:", cwd);
-    }, [cwd]);
-
     function handleSubmitCommand() {
         setCommandBuffer((prev) => {
             let cp = [...prev];
@@ -98,11 +93,15 @@ export const Terminal = () => {
             const stdOut = (buffer) => {
                 cp[cp.length - 1].output += `${buffer}\n\n`;
             };
+
+            let cwd = cp[cp.length - 1].location;
             const result = connection.execute(
                 cp[cp.length - 1].cmd,
                 stdOut,
                 cwd,
-                setCwd
+                (newCwd) => {
+                    cwd = newCwd;
+                }
             );
 
             stdOut(result.out);
@@ -120,20 +119,20 @@ export const Terminal = () => {
     function handleChange(newValue) {
         setCommandBuffer((prev) => {
             const cp = [...prev];
-            cp[commandBuffer.length - 1].cmd = newValue;
+            cp[cp.length - 1].cmd = newValue;
             return cp;
         });
     }
 
     return (
         <div className="terminal">
-            <NavBar cwd={cwd} />
+            <NavBar cwd={commandBuffer[commandBuffer.length - 1].location} />
             <div>
                 {commandBuffer.map((c, i) => (
                     <SingleTerminalCommand
                         key={i}
                         onChange={handleChange}
-                        cwd={cwd}
+                        cwd={c.location}
                         value={c.cmd}
                         output={c.output}
                         focus={i === commandBuffer.length - 1}

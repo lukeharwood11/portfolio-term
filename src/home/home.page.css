@@ -18,9 +18,7 @@
 }
 
 .terminal-input {
-    position: relative;
     margin-left: 0.5rem;
-    height: 1.5rem;
     color: white;
     white-space: pre;
 }
