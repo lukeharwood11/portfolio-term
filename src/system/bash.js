@@ -35,9 +35,10 @@ export class Flag {
 }
 
 export class Arg {
-    constructor(name, help) {
+    constructor(name, help, defaultValue = undefined) {
         this.name = name;
         this.help = help;
+        this.default = defaultValue;
     }
 }
 
@@ -48,8 +49,6 @@ export class Command {
         this.args = args;
         this.help = help;
         this.alt = alt;
-        this.args = [];
-        this.kwargs = {};
     }
 
     toString() {

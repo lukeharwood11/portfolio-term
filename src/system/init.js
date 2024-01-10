@@ -1,4 +1,7 @@
 import { CdCommand } from "./cmds/cd";
+import { ExitCommand } from "./cmds/exit";
+import { HelpCommand } from "./cmds/help";
+import { SudoCommand } from "./cmds/sudo";
 import { FileSystem, Directory, File } from "./filesystem";
 import { System } from "./system";
 
@@ -41,6 +44,14 @@ const defaultEnvVariables = {
     HOME: "~",
 };
 
-const commands = [new CdCommand()];
+const commands = [
+    new CdCommand(),
+    new HelpCommand(),
+    new ExitCommand(),
+    new SudoCommand(),
+];
 
-export const system = new System(fs, commands, defaultEnvVariables);
+const help = `Welcome to Luke's Portfolio terminal! LPORT version 1.0.0(1)-release (x86_64-cloud-notquitelinux)
+`;
+
+export const system = new System(fs, commands, defaultEnvVariables, help);

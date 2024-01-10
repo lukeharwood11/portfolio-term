@@ -20,10 +20,11 @@ export class SystemConnection {
 }
 
 export class System {
-    constructor(fs, commands, env) {
+    constructor(fs, commands, env, help) {
         this.fs = fs;
         this.commands = commands;
         this.env = env;
+        this.help = help;
     }
 
     execute(cmd, connection) {
