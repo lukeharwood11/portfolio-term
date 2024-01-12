@@ -5,7 +5,8 @@ export class SudoCommand extends Command {
         super(
             "sudo",
             [],
-            [new Arg("...CMD", "Commands to run with sudo privileges")]
+            [new Arg("...CMD", "Commands to run with sudo privileges")],
+            "Execute commands with root user privileges"
         );
     }
 
