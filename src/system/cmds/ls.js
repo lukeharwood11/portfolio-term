@@ -30,7 +30,7 @@ export class LsCommand extends Command {
         for (let i = 0; i < file.items.length; ++i) {
             const item = file.items[i];
             retString += item.isDirectory
-                ? `***${item.name}*** `
+                ? `**${item.name}/** `
                 : `${item.name} `;
         }
 

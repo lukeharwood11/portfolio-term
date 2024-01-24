@@ -11,10 +11,14 @@
     overflow-y: auto;
 }
 
+.terminal-command-container {
+    padding: 0.25rem;
+}
+
 .terminal-command {
     display: flex;
-    padding: 0 0.5rem;
     align-items: center;
+    padding: 0.1rem 0;
 }
 
 .terminal-input {

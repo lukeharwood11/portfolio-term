@@ -138,7 +138,7 @@ export const Terminal = () => {
                         : "~"
                 }
             />
-            <div>
+            <div className="terminal-command-container">
                 {commandBuffer.slice(csp).map((c, i) => (
                     <SingleTerminalCommand
                         key={i}
