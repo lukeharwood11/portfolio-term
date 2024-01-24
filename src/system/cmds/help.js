@@ -102,6 +102,10 @@ export class HelpCommand extends Command {
         }
 
         let resString = "";
+        // TODO:
+        // - allow for different flags to determine how the items are displayed
+        // - allow for metadata to be displayed
+        // (use markdown table to accomplish visuals)
         for (let i = 1; i < args.length; ++i) {
             const res = this.getHelpString(connection.system, args[i]);
             if (res) resString += res + "\n\n";
