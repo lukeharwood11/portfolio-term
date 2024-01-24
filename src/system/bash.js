@@ -48,7 +48,7 @@ export class Command {
         this.flags = flags;
         this.args = args;
         this.help = help;
-        this.alt = alt;
+        this.kwargs = {};
     }
 
     toString() {

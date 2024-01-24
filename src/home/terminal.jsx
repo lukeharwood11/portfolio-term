@@ -57,6 +57,8 @@ export const Terminal = () => {
     // the output
     // the location
     const [commandBuffer, setCommandBuffer] = useState([new Command("~")]);
+    // Command Start Point (what will be displayed)
+    const [csp, setCsp] = useState(0);
     const [connection, setConnection] = useState(new SystemConnection(system));
 
     const [cbIndex, setCbIndex] = useState(1); // 1 is the current buffer (Since length - 1 is the last command)
@@ -95,13 +97,16 @@ export const Terminal = () => {
             };
 
             let cwd = cp[cp.length - 1].location;
+
             const result = connection.execute(
                 cp[cp.length - 1].cmd,
                 stdOut,
                 cwd,
                 (newCwd) => {
                     cwd = newCwd;
-                }
+                },
+                cp,
+                setCsp
             );
 
             stdOut(result.out);
@@ -126,16 +131,22 @@ export const Terminal = () => {
 
     return (
         <div className="terminal">
-            <NavBar cwd={commandBuffer[commandBuffer.length - 1].location} />
+            <NavBar
+                cwd={
+                    commandBuffer.length > 0
+                        ? commandBuffer[commandBuffer.length - 1].location
+                        : "~"
+                }
+            />
             <div>
-                {commandBuffer.map((c, i) => (
+                {commandBuffer.slice(csp).map((c, i) => (
                     <SingleTerminalCommand
                         key={i}
                         onChange={handleChange}
                         cwd={c.location}
                         value={c.cmd}
                         output={c.output}
-                        focus={i === commandBuffer.length - 1}
+                        focus={i + csp === commandBuffer.length - 1}
                         onPreviousCommand={handlePreviousCommand}
                         onNextCommand={handleNextCommand}
                         onSubmit={handleSubmitCommand}

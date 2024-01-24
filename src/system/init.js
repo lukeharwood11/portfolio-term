@@ -1,4 +1,5 @@
 import { CdCommand } from "./cmds/cd";
+import { ClearCommand } from "./cmds/clear";
 import { ExitCommand } from "./cmds/exit";
 import { HelpCommand } from "./cmds/help";
 import { LsCommand } from "./cmds/ls";
@@ -51,6 +52,7 @@ const commands = [
     new ExitCommand(),
     new SudoCommand(),
     new LsCommand(),
+    new ClearCommand(),
 ];
 
 const help = `Welcome to Luke's Portfolio terminal! LPORT version 1.0.0(1)-release (x86_64-cloud-notquitelinux)

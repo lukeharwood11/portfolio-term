@@ -9,12 +9,16 @@ export class SystemConnection {
         this.cwd = undefined;
         this.setCwd = undefined;
         this.stdOut = undefined;
+        this.buffer = undefined;
+        this.setBufferIndex = undefined;
     }
 
-    execute(cmd, stdOut, cwd, setCwd) {
+    execute(cmd, stdOut, cwd, setCwd, buffer, setBufferIndex) {
         this.stdOut = stdOut;
         this.cwd = cwd;
         this.setCwd = setCwd;
+        this.buffer = buffer;
+        this.setBufferIndex = setBufferIndex;
         return this.system.execute(cmd, this);
     }
 }
