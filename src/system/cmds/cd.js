@@ -43,7 +43,7 @@ export class CdCommand extends Command {
             return connection.system.execute("help cd", connection);
         }
 
-        const pathInput = args.length == 2 ? args[1] : "~"; // default to $HOME
+        const pathInput = args.length === 2 ? args[1] : "~"; // default to $HOME
         const item = connection.system.fs.getItem(cwd, pathInput);
 
         console.table({ pathInput, item });
