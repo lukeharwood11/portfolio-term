@@ -34,7 +34,7 @@ export class System {
     execute(cmd, connection) {
         const tokenResult = tokenize(cmd);
         if (tokenResult.error) {
-            return new Result(tokens.error, ResultStatus.ERROR);
+            return new Result(tokenResult.error, ResultStatus.ERROR);
         }
         const tokens = tokenResult.tokens;
         const { args, kwargs } = parseFlags(tokens);
