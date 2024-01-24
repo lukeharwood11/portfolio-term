@@ -1,6 +1,7 @@
 import "./home.page.css";
 import { useState, useEffect, useRef, useId } from "react";
 import Markdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 export const SingleTerminalCommand = ({
     focus,
@@ -121,7 +122,9 @@ export const SingleTerminalCommand = ({
                 </span>
                 <div ref={terminalInputRef} className="terminal-input"></div>
             </div>
-            <Markdown className="terminal-output">{output}</Markdown>
+            <Markdown remarkPlugins={[remarkGfm]} className="terminal-output">
+                {output}
+            </Markdown>
         </div>
     );
 };

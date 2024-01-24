@@ -11,7 +11,7 @@ export class LsCommand extends Command {
 
     execute(args, kwargs, connection) {
         const path = args.length === 1 ? connection.cwd : args[1];
-        const file = connection.fs.getItem(connection.cwd, path);
+        const file = connection.system.fs.getItem(connection.cwd, path);
         if (!file) {
             return new Result(
                 `ls: cannot access '${path}': No such file or directory`
@@ -19,9 +19,21 @@ export class LsCommand extends Command {
         }
 
         if (!file.isDirectory) {
-            return new Result("");
+            return new Result(
+                `Path '${path}' is a file, not a directory`,
+                ResultStatus.IMPROPER_COMMAND
+            );
         }
 
-        return new Result("");
+        let retString = "";
+
+        for (let i = 0; i < file.items.length; ++i) {
+            const item = file.items[i];
+            retString += item.isDirectory
+                ? `***${item.name}*** `
+                : `${item.name} `;
+        }
+
+        return new Result(retString);
     }
 }

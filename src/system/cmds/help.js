@@ -69,7 +69,7 @@ export class HelpCommand extends Command {
         res += `\n\n${command.help}`;
 
         // build flag table
-        let table = "\n\n|Options|help|\n|--|--|\n";
+        let table = "\n\n|**Options**||\n|--|--|\n";
         for (let i = 0; i < command.flags.length; ++i) {
             const flag = command.flags[i];
             table += `|${flag.name}|${flag.help ? flag.help : ""}|\n`;
