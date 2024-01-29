@@ -6,6 +6,7 @@ import { LsCommand } from "./cmds/ls";
 import { SudoCommand } from "./cmds/sudo";
 import { FileSystem, Directory, File } from "./filesystem";
 import { System } from "./system";
+import { projectDir } from './init/projects';
 
 // configure our fake system
 const rootDir = new Directory("");
@@ -22,7 +23,7 @@ const rootDir = new Directory("");
 const homeDir = new Directory("home");
 const userDir = new Directory("guest");
 homeDir.addItems([userDir]);
-userDir.addItems([new Directory("test")]);
+userDir.addItems([projectDir]);
 
 rootDir.addItems([
     new Directory("bin"),
