@@ -9,5 +9,10 @@ const portfolioTerminalProject = new File("portfolio-terminal.md", portfolioTerm
 const portfolioText = ``;
 const portfolioProject = new File("portfolio.md", portfolioText)
 
+const pysimulateText = ``;
+const pysimulateProject = new File("pysimulate.md", pysimulateText)
 
-projectDir.addItems([portfolioTerminalProject, portfolioProject]);
+const multiplayerWordleText = ``;
+const multiplayerWordleProject = new File("multiplayer-wordle.md", multiplayerWordleText);
+
+projectDir.addItems([portfolioTerminalProject, portfolioProject, pysimulateProject, multiplayerWordleProject]);

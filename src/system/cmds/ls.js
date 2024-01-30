@@ -25,13 +25,13 @@ export class LsCommand extends Command {
             );
         }
 
-        let retString = "";
+        let retString = "|||\n|--|--|\n";
 
         for (let i = 0; i < file.items.length; ++i) {
             const item = file.items[i];
             retString += item.isDirectory
-                ? `**${item.name}/** `
-                : `${item.name} `;
+                ? `|**${item.name}/**|\n  `
+                : `|${item.name}|  \n`;
         }
 
         return new Result(retString);

@@ -73,7 +73,7 @@ function insertIntoObject(obj, key, value) {
 }
 
 export function parseFlags(tokens) {
-    const flagReg = /--([a-zA-Z]+)|-([a-zA-Z]+)/;
+    const flagReg = /^--([^\s]+)|^-([^\s]+)/;
     const kwargs = {};
     const args = [];
     const seen = new Set([]);
@@ -139,5 +139,7 @@ export function tokenize(cmd) {
     } else if (buffer.trim() !== "") {
         res.add(buffer);
     }
+
+    console.table(res)
     return res;
 }

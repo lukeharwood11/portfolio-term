@@ -72,6 +72,10 @@ export class FileSystem {
                 nextNode =
                     node.parentDir && cur === ".." ? node.parentDir : node;
             } else {
+                if (cur === "") {
+                    nextNode = node;
+                    continue;
+                }
                 for (let j = 0; j < node.items.length; ++j) {
                     const n = node.items[j];
                     if (n.name === cur) {

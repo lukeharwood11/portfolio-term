@@ -7,6 +7,9 @@ import { SudoCommand } from "./cmds/sudo";
 import { FileSystem, Directory, File } from "./filesystem";
 import { System } from "./system";
 import { projectDir } from './init/projects';
+import { aboutDir } from "./init/about";
+import { experienceDir } from './init/experience';
+import { contribDir } from './init/contributions'
 
 // configure our fake system
 const rootDir = new Directory("");
@@ -23,10 +26,11 @@ const rootDir = new Directory("");
 const homeDir = new Directory("home");
 const userDir = new Directory("guest");
 homeDir.addItems([userDir]);
-userDir.addItems([projectDir]);
+userDir.addItems([projectDir, aboutDir, experienceDir, contribDir]);
 
+const binDir = new Directory("bin");
 rootDir.addItems([
-    new Directory("bin"),
+    binDir,
     new Directory("etc"),
     homeDir,
     new Directory("opt"),
@@ -55,6 +59,9 @@ const commands = [
     new LsCommand(),
     new ClearCommand(),
 ];
+
+console.log(binDir)
+binDir.addItems(commands.map((command) => new File(command.name)))
 
 const help = `Welcome to Luke's Portfolio terminal! LPORT version 1.0.0(1)-release (x86_64-cloud-notquitelinux)
 `;
