@@ -29,6 +29,12 @@ export class CatCommand extends Command {
         for (let i = 1; i < args.length; i++) {
             const path = args[i];
             const file = connection.system.fs.getItem(connection.cwd, path);
+            if (!file) {
+                return new Result(
+                    `cat: ${path}: No such file or directory`,
+                    ResultStatus.IMPROPER_COMMAND
+                );
+            }
             if (!file.isDirectory) {
                 if (!file.canRead()) {
                     return new Result(
