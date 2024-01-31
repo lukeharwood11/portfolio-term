@@ -47,10 +47,10 @@ export const SingleTerminalCommand = ({
         }
         switch (e.key) {
             case "ArrowUp":
-                onPreviousCommand();
+                onPreviousCommand((value) => setCaretPos(value.length));
                 break;
             case "ArrowDown":
-                onNextCommand();
+                onNextCommand((value) => setCaretPos(value.length));
                 break;
             case "ArrowLeft":
                 if (caretPos > 0) {

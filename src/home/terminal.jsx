@@ -11,7 +11,7 @@ import {
 import { SingleTerminalCommand } from "./command-component";
 import { system } from "../system/init";
 import { SystemConnection } from "../system/system";
-import { isMobile, mobileModel } from "react-device-detect";
+import { isMobile } from "react-device-detect";
 
 const NavBar = ({ cwd }) => {
     return (
@@ -66,6 +66,7 @@ export const Terminal = () => {
     // the output
     // the location
     const [commandBuffer, setCommandBuffer] = useState([new Command("~")]);
+    const [cursor, setCursor] = useState(0);
     // Command Start Point (what will be displayed)
     const [csp, setCsp] = useState(0);
     const [connection, setConnection] = useState(new SystemConnection(system));
@@ -73,12 +74,13 @@ export const Terminal = () => {
     const [cbIndex, setCbIndex] = useState(1); // 1 is the current buffer (Since length - 1 is the last command)
     const [blocked, setBlocked] = useState(false); // blocked meaning a command or process is not detatched
 
-    function handleNextCommand() {
+    function handleNextCommand(callback) {
         if (cbIndex > 2) {
             setCbIndex((prev) => {
                 handleChange(
                     commandBuffer[commandBuffer.length - (prev - 1)].cmd
                 );
+                callback(commandBuffer[commandBuffer.length - (prev - 1)].cmd);
                 return prev - 1;
             });
         } else if (cbIndex === 2) {
@@ -86,12 +88,13 @@ export const Terminal = () => {
             handleChange("");
         }
     }
-    function handlePreviousCommand() {
+    function handlePreviousCommand(callback) {
         if (cbIndex < commandBuffer.length) {
             setCbIndex((prev) => {
                 handleChange(
                     commandBuffer[commandBuffer.length - (prev + 1)].cmd
                 );
+                callback(commandBuffer[commandBuffer.length - (prev + 1)].cmd);
                 return prev + 1;
             });
         }
