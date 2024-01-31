@@ -43,12 +43,13 @@ export class Arg {
 }
 
 export class Command {
-    constructor(name, flags, args, help, alt = undefined) {
+    constructor(name, flags, args, help, alt = undefined, disabled=false) {
         this.name = name;
         this.flags = flags;
         this.args = args;
         this.help = help;
         this.kwargs = {};
+        this.disabled = disabled;
     }
 
     toString() {
@@ -56,6 +57,28 @@ export class Command {
     }
 
     execute(args, kwargs, connection) {}
+}
+
+export class NotImplementedCommand extends Command {
+    constructor(name) {
+        super(name, [], [], "Not implemented", undefined, true);
+    }
+
+    execute(args, kwargs, connection) {
+        return new Result(
+            `${this.name}: command not implemented.\n\nPsst... you can implement it yourself! ;)\n\n[GitHub Repo](https://github.com/lukeharwood11/portfolio-term)`,
+            ResultStatus.ERROR
+        );
+    }
+}
+
+export function notImplemented(unimplmentedCommands) {
+    const res = [];
+    for (let i = 0; i < unimplmentedCommands.length; ++i) {
+        const c = unimplmentedCommands[i];
+        res.push(new NotImplementedCommand(c));
+    }
+    return res;
 }
 
 function insertIntoObject(obj, key, value) {
