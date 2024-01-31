@@ -11,6 +11,7 @@ import {
 import { SingleTerminalCommand } from "./command-component";
 import { system } from "../system/init";
 import { SystemConnection } from "../system/system";
+import { isMobile, mobileModel } from "react-device-detect";
 
 const NavBar = ({ cwd }) => {
     return (
@@ -22,18 +23,24 @@ const NavBar = ({ cwd }) => {
             </div>
             <div className="middle-bar">guest@lukes-portfolio: {cwd}</div>
             <div className="right-command-bar">
-                <button className="cmd-btn">
-                    <MdOutlineSearch size={25} />
-                </button>
-                <button className="cmd-btn">
-                    <MdMenu size={25} />
-                </button>
-                <button className="circle-cmd-btn">
-                    <MdMinimize size={15} />
-                </button>
-                <button className="circle-cmd-btn" onClick={() => {
-                    window.location.href = "https://lukeharwood.dev";
-                }}>
+                {!isMobile && (
+                    <>
+                        <button className="cmd-btn">
+                            <MdOutlineSearch size={25} />
+                        </button>
+                        <button className="cmd-btn">
+                            <MdMenu size={25} />
+                        </button>
+                        <button className="circle-cmd-btn">
+                            <MdMinimize size={15} />
+                        </button>
+                    </>
+                )}
+                <button
+                    className="circle-cmd-btn"
+                    onClick={() => {
+                        window.location.href = "https://lukeharwood.dev";
+                    }}>
                     <MdClose size={15} />
                 </button>
             </div>
@@ -140,21 +147,33 @@ export const Terminal = () => {
                         : "~"
                 }
             />
-            <div className="terminal-command-container">
-                {commandBuffer.slice(csp).map((c, i) => (
-                    <SingleTerminalCommand
-                        key={i}
-                        onChange={handleChange}
-                        cwd={c.location}
-                        value={c.cmd}
-                        output={c.output}
-                        focus={i + csp === commandBuffer.length - 1}
-                        onPreviousCommand={handlePreviousCommand}
-                        onNextCommand={handleNextCommand}
-                        onSubmit={handleSubmitCommand}
-                    />
-                ))}
-            </div>
+            {isMobile ? (
+                <div className="terminal-mobile">
+                    Looks like you're on your phone.{" "}
+                    <span>Get off (and then come back).</span>
+                    <br />
+                    Or go to{" "}
+                    <a href="https://lukeharwood.dev">lukeharwood.dev</a>
+                </div>
+            ) : (
+                <div className="terminal-command-container">
+                    {commandBuffer.slice(csp).map((c, i) => (
+                        <SingleTerminalCommand
+                            key={i}
+                            onChange={handleChange}
+                            cwd={c.location}
+                            value={c.cmd}
+                            output={c.output}
+                            focus={i + csp === commandBuffer.length - 1}
+                            onPreviousCommand={handlePreviousCommand}
+                            onNextCommand={handleNextCommand}
+                            onSubmit={handleSubmitCommand}
+                        />
+                    ))}
+                    {}
+                </div>
+            )}
+
             <Footer />
         </div>
     );
