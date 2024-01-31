@@ -31,7 +31,9 @@ const NavBar = ({ cwd }) => {
                 <button className="circle-cmd-btn">
                     <MdMinimize size={15} />
                 </button>
-                <button className="circle-cmd-btn">
+                <button className="circle-cmd-btn" onClick={() => {
+                    window.location.href = "https://lukeharwood.dev";
+                }}>
                     <MdClose size={15} />
                 </button>
             </div>
