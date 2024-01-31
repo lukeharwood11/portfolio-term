@@ -41,6 +41,7 @@
     height: 50px;
     border-radius: 50%;
     object-fit: cover;
+    margin: .5rem 1rem;
 }
 
 .terminal-output > p {
