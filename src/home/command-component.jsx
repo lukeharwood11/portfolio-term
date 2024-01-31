@@ -42,6 +42,8 @@ export const SingleTerminalCommand = ({
     }
 
     const handleKeyDown = (e) => {
+        e.stopPropagation();
+        e.preventDefault();
         if (!focus) {
             return;
         }

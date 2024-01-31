@@ -25,7 +25,7 @@ export class HelpCommand extends Command {
     }
 
     systemHelp(system) {
-        let res = system.help;
+        let res = "---\n" + system.help;
         res +=
             "\n\nThese shell commands are defined internally.  Type `help` to see this list.\n\n";
 
@@ -33,7 +33,7 @@ export class HelpCommand extends Command {
             "Type `help name` to find out more about the function `name'.\n\n";
 
         res +=
-            "A star (*) next to a name means that the command is disabled.\n\n";
+            "A star (*) next to a name means that the command is disabled.\n\n---\n";
 
         for (let i = 0; i < system.commands.length; ++i) {
             res += this.getExampleString(system.commands[i]) + "\n\n";
