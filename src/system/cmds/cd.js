@@ -49,15 +49,21 @@ export class CdCommand extends Command {
         console.table({ pathInput, item });
         // set the cwd
         if (item) {
+            if (!item.isDirectory) {
+                return new Result(
+                    `Path '${pathInput}' is a file, not a directory`,
+                    ResultStatus.IMPROPER_COMMAND
+                );
+            }
             connection.setCwd(
                 connection.system.fs.simplifyPath(item.getAbsolutePath())
             );
-        } else {
-            return new Result(
-                `bash: cd: ${pathInput}: No such file or directory`,
-                ResultStatus.IMPROPER_COMMAND
-            );
-        }
+            } else {
+                return new Result(
+                    `bash: cd: ${pathInput}: No such file or directory`,
+                    ResultStatus.IMPROPER_COMMAND
+                );
+            }
         return new Result();
     }
 }

@@ -1,9 +1,43 @@
+export const Permissions = {
+    READ: "r",
+    WRITE: "w",
+    EXECUTE: "x",
+}
+
 export class Item {
     constructor(name, isDirectory) {
         this.name = name;
         this.isDirectory = isDirectory;
-        this.permissions = [];
+        this.permissions = new Set([Permissions.READ]);
         this.parentDir = undefined;
+    }
+
+    setPermissions(permissions) {
+        this.permissions = new Set(permissions);
+    }
+
+    updatePermissions(permissions) {
+        for (let i = 0; i < permissions.length; ++i) {
+            this.permissions.add(permissions[i]);
+        }
+    }
+
+    removePermissions(permissions) {
+        for (let i = 0; i < permissions.length; ++i) {
+            this.permissions.delete(permissions[i]);
+        }
+    }
+
+    canRead() {
+        return this.permissions.has(Permissions.READ)
+    }
+
+    canWrite() {
+        return this.permissions.has(Permissions.WRITE);
+    }
+
+    canExecute() {
+        return this.permissions.has(Permissions.EXECUTE);
     }
 
     getAbsolutePath() {
@@ -72,6 +106,10 @@ export class FileSystem {
                 nextNode =
                     node.parentDir && cur === ".." ? node.parentDir : node;
             } else {
+                if (cur === "") {
+                    nextNode = node;
+                    continue;
+                }
                 for (let j = 0; j < node.items.length; ++j) {
                     const n = node.items[j];
                     if (n.name === cur) {

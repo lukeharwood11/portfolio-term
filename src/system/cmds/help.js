@@ -43,7 +43,7 @@ export class HelpCommand extends Command {
     }
 
     getExampleString(command) {
-        return `${command.name}: \`${command.name}${
+        return `${command.disabled ? '(*) ' : ''}${command.name}: \`${command.name}${
             command.flags.length > 0 ? " [...options]" : ""
         }${
             command.args.length > 0
