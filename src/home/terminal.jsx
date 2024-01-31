@@ -149,11 +149,11 @@ export const Terminal = () => {
             />
             {isMobile ? (
                 <div className="terminal-mobile">
-                    Looks like you're on your phone.{" "}
-                    <span>Get off (and then come back).</span>
+                    Looks like you're on your phone (which isn't supported atm). 
                     <br />
-                    Or go to{" "}
-                    <a href="https://lukeharwood.dev">lukeharwood.dev</a>
+                    Come back when you're on something with a keyboard.
+                    <br />
+                    Or go to <a href="https://lukeharwood.dev">lukeharwood.dev</a>
                 </div>
             ) : (
                 <div className="terminal-command-container">
