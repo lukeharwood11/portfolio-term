@@ -100,7 +100,6 @@ export class FileSystem {
      */
     resolve(startingNode, pathLs) {
         let node = startingNode;
-        console.table({ startingNode, pathLs });
         for (let i = 0; i < pathLs.length; ++i) {
             // search for next node
             const cur = pathLs[i];
@@ -161,7 +160,6 @@ export class FileSystem {
         }
         // given a path return an Item that is mounted in the file system
         cwd = this.simplifyPath(cwd);
-        console.table({ cwd, path });
         const splitPath = path.split("/");
         let startingNode;
         if (splitPath[0] === "") {

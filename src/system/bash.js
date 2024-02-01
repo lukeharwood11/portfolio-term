@@ -163,6 +163,5 @@ export function tokenize(cmd) {
         res.add(buffer);
     }
 
-    console.table(res)
     return res;
 }
