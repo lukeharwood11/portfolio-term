@@ -3,6 +3,14 @@ import { useState, useEffect, useRef, useId } from "react";
 import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
+const LinkComponent = ({ href, children }) => {
+    return (
+        <a href={href} target="_blank" rel="noreferrer">
+            {children}
+        </a>
+    );
+};
+
 export const SingleTerminalCommand = ({
     focus,
     onPreviousCommand,
@@ -34,15 +42,17 @@ export const SingleTerminalCommand = ({
     }
 
     const handleKeyDown = (e) => {
+        e.stopPropagation();
+        e.preventDefault();
         if (!focus) {
             return;
         }
         switch (e.key) {
             case "ArrowUp":
-                onPreviousCommand();
+                onPreviousCommand((value) => setCaretPos(value.length));
                 break;
             case "ArrowDown":
-                onNextCommand();
+                onNextCommand((value) => setCaretPos(value.length));
                 break;
             case "ArrowLeft":
                 if (caretPos > 0) {
@@ -122,7 +132,10 @@ export const SingleTerminalCommand = ({
                 </span>
                 <div ref={terminalInputRef} className="terminal-input"></div>
             </div>
-            <Markdown remarkPlugins={[remarkGfm]} className="terminal-output">
+            <Markdown
+                remarkPlugins={[remarkGfm]}
+                className="terminal-output"
+                components={{ a: LinkComponent }}>
                 {output}
             </Markdown>
         </div>

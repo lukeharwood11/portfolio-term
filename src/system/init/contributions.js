@@ -4,7 +4,6 @@ export const contribDir = new Directory("contributors");
 
 // Grab this list from the GitHub API
 // Example Request
-
 // [
 //     {
 //         "login": "lukeharwood11",

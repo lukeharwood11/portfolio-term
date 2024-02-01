@@ -32,6 +32,10 @@
     color: black;
 }
 
+.terminal-mobile {
+    color: white;
+}
+
 .terminal-output {
     color: white;
 }
@@ -41,13 +45,11 @@
     height: 50px;
     border-radius: 50%;
     object-fit: cover;
+    margin: .2rem .5rem;
 }
 
 .terminal-output > p {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    margin: 0;
+    margin: .2rem 0;
 }
 
 a {
