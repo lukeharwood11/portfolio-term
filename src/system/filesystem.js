@@ -93,6 +93,10 @@ export class FileSystem {
         return path;
     }
 
+    partialResolve(startingNode, pathLs) {
+        // given a path return an Item that is mounted in the file system along with the path that was not resolved.
+    }
+
     /**
      * @param {Array} pathLs
      * @param {boolean} absolute (default = true)
@@ -100,6 +104,7 @@ export class FileSystem {
      */
     resolve(startingNode, pathLs) {
         let node = startingNode;
+
         for (let i = 0; i < pathLs.length; ++i) {
             // search for next node
             const cur = pathLs[i];
@@ -137,11 +142,17 @@ export class FileSystem {
                 !nextNode ||
                 (!nextNode.isDirectory && i !== pathLs.length - 1)
             ) {
-                return;
+                return {
+                    node,
+                    unresolvedPath: pathLs.slice(i),
+                };
             }
             node = nextNode;
         }
-        return node;
+        return {
+            node,
+            unresolvedPath: [],
+        }
     }
 
     
@@ -173,8 +184,37 @@ export class FileSystem {
         } else {
             startingNode = this.getItem("", cwd);
         }
-        return splitPath.length === 0 || !splitPath[0]
-            ? startingNode
+        const result = splitPath.length === 0 || !splitPath[0]
+            ? { node: startingNode, unresolvedPath: [] }
             : this.resolve(startingNode, splitPath);
+        
+        return result.unresolvedPath.length === 0 ? result.node : undefined;
+    }
+
+    getPartialItem(cwd, path=undefined) {
+        if (path === undefined) {
+            path = cwd;
+        }
+        // given a path return an Item that is mounted in the file system
+        cwd = this.simplifyPath(cwd);
+        const splitPath = path.split("/");
+        let startingNode;
+        if (splitPath[0] === "") {
+            // start from the root directory
+            splitPath.shift();
+            startingNode = this.rootDir;
+        } else if (splitPath[0] === "~") {
+            // start from the home directory
+            splitPath.shift();
+            startingNode = this.homeDir;
+        } else {
+            startingNode = this.getItem("", cwd);
+        }
+
+        const result = splitPath.length === 0 || !splitPath[0]
+            ? { node: startingNode, unresolvedPath: [] }
+            : this.resolve(startingNode, splitPath);
+        
+        return result
     }
 }

@@ -147,15 +147,17 @@ export const Terminal = () => {
         const tokens = tokenize(currentCommand.cmd).tokens;
         // TODO: add tab completion for specific commands
         // For now, simply only use files
-        const directory = connection.system.fs.getItem(currentCommand.location);
         const lastToken = tokens.length > 0 ? tokens[tokens.length - 1] : "";
-        const possibleMatches = directory.items.filter((f) => f.name.startsWith(lastToken));
-
+        const { node, unresolvedPath } = connection.system.fs.getPartialItem(currentCommand.location, lastToken);
+        if (unresolvedPath.length === 0) {
+            return;
+        }
+        const possibleMatches = node.isDirectory ? node.items.filter((f) => f.name.startsWith(unresolvedPath[0])) : [];
         if (possibleMatches.length > 0) {
             // TODO: allow tab completion to be used multiple times to cycle through possible matches
             const prefix = findCommonPrefix(possibleMatches.map((f) => f.name));
             const newCommand = currentCommand.cmd.replace(
-                new RegExp(`${lastToken}$`),
+                new RegExp(`${unresolvedPath[0]}$`),
                 prefix
             );
             handleChange(newCommand);
