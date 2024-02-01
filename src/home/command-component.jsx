@@ -13,6 +13,7 @@ const LinkComponent = ({ href, children }) => {
 
 export const SingleTerminalCommand = ({
     focus,
+    ignorePrefix,
     onPreviousCommand,
     onNextCommand,
     onChange,
@@ -126,8 +127,10 @@ export const SingleTerminalCommand = ({
         <div onKeyDown={() => handleKeyDown()} key={id} ref={ref}>
             <div className="terminal-command">
                 <span className="command-prefix">
-                    <span className="user">guest@lukes-portfolio:</span>
-                    <span className="cwd">{cwd}</span>
+                    {
+                        !ignorePrefix &&  <><span className="user">guest@lukes-portfolio:</span>
+                        <span className="cwd">{cwd}</span></>
+                    }
                     <span className="white">$</span>
                 </span>
                 <div ref={terminalInputRef} className="terminal-input"></div>

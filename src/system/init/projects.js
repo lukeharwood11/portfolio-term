@@ -10,7 +10,7 @@ This website is a terminal-based portfolio that was built using React.
 
 It features a pseudo-filesystem that allows you to navigate through the portfolio and view my experience, projects and more.
 
-If you're interested in contributing, or viewing the codebase. Check out the [GitHub Repo](https://github.com/lukeharwood11/portfolio-term).
+If you're interested in contributing, or viewing the codebase- check out the [GitHub Repo](https://github.com/lukeharwood11/portfolio-term).
 `;
 const portfolioTerminalProject = new File("portfolio-terminal.md", portfolioTerminalText)
 

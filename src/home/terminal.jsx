@@ -152,11 +152,15 @@ export const Terminal = () => {
             />
             {isMobile ? (
                 <div className="terminal-mobile">
-                    Looks like you're on your phone (which isn't supported atm). 
-                    <br />
-                    Come back when you're on something with a keyboard.
-                    <br />
-                    Or go to <a href="https://lukeharwood.dev">lukeharwood.dev</a>
+                    <SingleTerminalCommand
+                        onChange={(_) => {}}
+                        ignorePrefix
+                        value={"help i'm on mobile"}
+                        output={"---\n`426 Upgrade Required`\n\n> Ahhh, yes that's not going to work. \n\nI might support that... but in the meantime, go to [lukeharwood.dev](https://lukeharwood.dev). \n\nOr use something with a keyboard."}
+                        onPreviousCommand={handlePreviousCommand}
+                        onNextCommand={handleNextCommand}
+                        onSubmit={handleSubmitCommand}
+                    />
                 </div>
             ) : (
                 <div className="terminal-command-container">

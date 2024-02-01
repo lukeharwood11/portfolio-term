@@ -4,7 +4,9 @@ import { ExitCommand } from "./cmds/exit";
 import { HelpCommand } from "./cmds/help";
 import { LsCommand } from "./cmds/ls";
 import { SudoCommand } from "./cmds/sudo";
-import { CatCommand } from "./cat";
+import { CatCommand } from "./cmds/cat";
+import { EchoCommand } from "./cmds/echo";
+import { PwdCommand } from "./cmds/pwd";
 import { FileSystem, Directory, File } from "./filesystem";
 import { notImplemented } from "./bash";
 import { System } from "./system";
@@ -41,13 +43,7 @@ rootDir.addItems([
     new Directory("var"),
 ]);
 
-console.log(userDir.getAbsolutePath());
-
 const fs = new FileSystem(rootDir, userDir);
-
-console.log(fs.simplifyPath("/home/guest/test/"));
-
-// console.log(rootDir.getAbsolutePath());
 
 const defaultEnvVariables = {
     HOME: "~",
@@ -105,59 +101,7 @@ const defaultEnvVariables = {
 // useradd and usermod - Add new user or change existing users data
 // passwd - Create or update passwords for existing users
 const unimplementedCommands = notImplemented(
-    [
-        "apt-get",
-        "apt",
-        "pwd",
-        "mkdir",
-        "mv",
-        "cp",
-        "rm",
-        "touch",
-        "ln",
-        "echo",
-        "less",
-        "man",
-        "uname",
-        "whoami",
-        "tar",
-        "grep",
-        "head",
-        "tail",
-        "diff",
-        "cmp",
-        "comm",
-        "sort",
-        "export",
-        "zip",
-        "unzip",
-        "ssh",
-        "service",
-        "ps",
-        "kill",
-        "killall",
-        "df",
-        "mount",
-        "chmod",
-        "chown",
-        "ifconfig",
-        "traceroute",
-        "wget",
-        "ufw",
-        "iptables",
-        "pacman",
-        "yum",
-        "rpm",
-        "cal",
-        "alias",
-        "dd",
-        "whereis",
-        "whatis",
-        "top",
-        "useradd",
-        "usermod",
-        "passwd"
-      ]
+    ["apt-get", "apt", "mkdir", "mv", "cp", "rm", "touch", "ln", "less", "man", "uname", "whoami", "tar", "grep", "head", "tail", "diff", "cmp", "comm", "sort", "export", "zip", "unzip", "ssh", "service", "ps", "kill", "killall", "df", "mount", "chmod", "chown", "ifconfig", "traceroute", "wget", "ufw", "iptables", "pacman", "yum", "rpm", "cal", "alias", "dd", "whereis", "whatis", "top", "useradd", "usermod", "passwd"] 
 )
 
 const commands = [
@@ -168,10 +112,11 @@ const commands = [
     new LsCommand(),
     new ClearCommand(),
     new CatCommand(),
+    new EchoCommand(),
+    new PwdCommand(),
     ...unimplementedCommands,
 ];
 
-console.log(binDir)
 binDir.addItems(commands.map((command) => {
     const file = new File(command.name);
     file.setPermissions([]);

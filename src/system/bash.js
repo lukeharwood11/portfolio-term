@@ -49,6 +49,7 @@ export class Command {
         this.args = args;
         this.help = help;
         this.kwargs = {};
+        this.alt = alt;
         this.disabled = disabled;
     }
 

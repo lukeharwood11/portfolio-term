@@ -38,9 +38,6 @@ export class System {
         }
         const tokens = tokenResult.tokens;
         const { args, kwargs } = parseFlags(tokens);
-        console.log(tokens);
-        console.table(args);
-        console.table(kwargs);
         // find command
         if (tokens.length === 0) {
             return new Result();
@@ -50,7 +47,6 @@ export class System {
         let command;
         for (let i = 0; i < this.commands.length; ++i) {
             const c = this.commands[i];
-            console.log(c, userCmd);
             if (c.alt === userCmd || c.name === userCmd) {
                 command = c;
                 break;
