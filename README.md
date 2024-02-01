@@ -1,4 +1,4 @@
-# `PortTerm`
+# `PTerm`
 
 **Live Link: [terminal.lukeharwood.dev](https://terminal.lukeharwood.dev)**
 
@@ -17,7 +17,7 @@ If you see a command that hasn't been implemented yet, or you see a way this pro
 
 CI/CD is configured to deploy to staging when a pull request is created, and deploy to production when PRs are approved and merged.
 
-### Ideas to expand `PortTerm`
+### Ideas to expand `PTerm`
 
 - [ ] Add easter eggs throughout system
 - [ ] Implement commands to add files/directories, or move/copy existing ones.
