@@ -33,14 +33,94 @@ homeDir.addItems([userDir]);
 userDir.addItems([projectDir, aboutDir, experienceDir, contribDir]);
 
 const binDir = new Directory("bin");
+const etcDir = new Directory("etc");
+etcDir.addItems([
+    new File("hosts", "127.0.0.1 localhost", false),
+    new File("passwd", "root:x:0:0:root:/root:/bin/bash", false),
+    new File("group", "root:x:0:", false),
+    new File("sudoers", "root ALL=(ALL:ALL) ALL", false),
+    new File("fstab", "/dev/sda1 / ext4 defaults 0 1", false),
+    new File("network", "NETWORKING=yes", false),
+    new File("resolv.conf", "nameserver 8.8.8.8", false),
+    new File("hosts.allow", "sshd: 192.168.0.0/16", false),
+    new File("hosts.deny", "ALL: ALL", false),
+    new File("cron.deny", "", false),
+    new File("cron.allow", "", false),
+    new File("motd", "Welcome to my Linux system!", false),
+    new File("issue", "Welcome to my Linux system!", false),
+    new File("issue.net", "Welcome to my Linux system!", false),
+]);
+
+const optDir = new Directory("opt");
+optDir.addItems([
+    new File("java", "", true),
+    new File("nodejs", "", true),
+    new File("python", "", true),
+    new File("ruby", "", true),
+    new File("go", "", true),
+    new File("docker", "", true),
+    new File("mysql", "", true),
+    new File("postgresql", "", true),
+    new File("mongodb", "", true),
+    new File("redis", "", true),
+    new File("nginx", "", true),
+    new File("apache", "", true),
+    new File("tomcat", "", true),
+    new File("git", "", true),
+    new File("vscode", "", true),
+    new File("intellij", "", true),
+    new File("eclipse", "", true),
+    new File("sublime", "", true),
+    new File("vim", "", true),
+    new File("emacs", "", true),
+    new File("php", "", true),
+    new File("rust", "", true),
+    new File("scala", "", true),
+    new File("haskell", "", true),
+    new File("kotlin", "", true),
+    new File("typescript", "", true),
+    new File("flutter", "", true),
+    new File("react", "", true),
+    new File("angular", "", true),
+    new File("vue", "", true),
+    new File("webpack", "", true),
+    new File("babel", "", true),
+    new File("jest", "", true),
+    new File("mocha", "", true),
+    new File("cypress", "", true),
+    new File("eslint", "", true),
+    new File("prettier", "", true),
+    new File("webpack", "", true),
+    new File("babel", "", true),
+    new File("jest", "", true),
+]);
+
+const tmpDir = new Directory("tmp");
+tmpDir.addItems([
+    new File("tempFile1.txt", "This is a temporary file.", false),
+    new File("tempFile2.txt", "This is another temporary file.", false),
+]);
+
+const usrDir = new Directory("usr");
+usrDir.addItems([
+    new File("user1.txt", "This is user 1's file.", false),
+    new File("user2.txt", "This is user 2's file.", false),
+]);
+
+const varDir = new Directory("var");
+varDir.addItems([
+    new File("log.txt", "This is a log file.", false),
+    new File("data.txt", "This is a data file.", false),
+]);
+
 rootDir.addItems([
     binDir,
-    new Directory("etc"),
+    etcDir,
     homeDir,
-    new Directory("opt"),
-    new Directory("tmp"),
-    new Directory("usr"),
-    new Directory("var"),
+    optDir,
+    tmpDir,
+    usrDir,
+    varDir,
 ]);
 
 const fs = new FileSystem(rootDir, userDir);

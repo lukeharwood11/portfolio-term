@@ -55,9 +55,12 @@ export class Item {
 }
 
 export class File extends Item {
-    constructor(name, text = "") {
+    constructor(name, text = "", disableAllPermissions = false) {
         super(name, false);
         this.text = text;
+        if (disableAllPermissions) {
+            this.permissions = new Set([]);
+        }
     }
 }
 

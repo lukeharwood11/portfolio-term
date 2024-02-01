@@ -1,4 +1,3 @@
-import { FileSystem } from "./filesystem";
 
 export class Tokens {
     constructor(raw) {
