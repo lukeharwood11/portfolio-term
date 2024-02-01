@@ -21,6 +21,7 @@ export const SingleTerminalCommand = ({
     cwd,
     output,
     onSubmit,
+    onTabPressed,
 }) => {
     const id = useId();
     const [caretPos, setCaretPos] = useState(0);
@@ -74,6 +75,10 @@ export const SingleTerminalCommand = ({
             case "Enter":
                 onSubmit();
                 break;
+            case "Tab": 
+                // TOOD: implement tab completion
+                onTabPressed((value) => setCaretPos(value.length));
+                break;
             default:
                 if (e.key.length === 1 && !e.ctrlKey && !e.altKey) {
                     handleAdd(e.key);
@@ -84,7 +89,7 @@ export const SingleTerminalCommand = ({
     };
 
     function escapeHTML(string) {
-        // fun little trick for cleaning html
+        // fun little trick for cleaning html :)
         const element = document.createElement("div");
         element.innerText = string;
         return element.innerHTML;

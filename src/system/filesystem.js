@@ -152,7 +152,10 @@ export class FileSystem {
      * 
      * @todo This function should be absorbed by the resolve function or vice versa.
      */
-    getItem(cwd, path) {
+    getItem(cwd, path=undefined) {
+        if (path === undefined) {
+            path = cwd;
+        }
         // given a path return an Item that is mounted in the file system
         cwd = this.simplifyPath(cwd);
         console.table({ cwd, path });

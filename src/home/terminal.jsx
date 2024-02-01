@@ -88,6 +88,7 @@ export const Terminal = () => {
             handleChange("");
         }
     }
+
     function handlePreviousCommand(callback) {
         if (cbIndex < commandBuffer.length) {
             setCbIndex((prev) => {
@@ -141,6 +142,53 @@ export const Terminal = () => {
         });
     }
 
+    function handleTab(callback) {
+        const currentCommand = commandBuffer[commandBuffer.length - 1];
+        const tokens = tokenize(currentCommand.cmd).tokens;
+        // TODO: add tab completion for specific commands
+        // For now, simply only use files
+        const directory = connection.system.fs.getItem(currentCommand.location);
+        const lastToken = tokens.length > 0 ? tokens[tokens.length - 1] : "";
+        const possibleMatches = directory.items.filter((f) => f.name.startsWith(lastToken));
+
+        if (possibleMatches.length > 0) {
+            // TODO: allow tab completion to be used multiple times to cycle through possible matches
+            const prefix = findCommonPrefix(possibleMatches.map((f) => f.name));
+            const newCommand = currentCommand.cmd.replace(
+                new RegExp(`${lastToken}$`),
+                prefix
+            );
+            handleChange(newCommand);
+            callback(newCommand);
+        } 
+    }
+
+    /**
+     * Finds the common prefix among an array of words.
+     * 
+     * @param {string[]} words - The array of words to find the common prefix from.
+     * @returns {string} The common prefix among the words.
+     */
+    function findCommonPrefix(words) {
+        if (words.length === 0) {
+            return "";
+        }
+        
+        const sortedWords = words.sort();
+        const first = sortedWords[0];
+        const last = sortedWords[sortedWords.length - 1];
+        let prefix = "";
+        
+        for (let i = 0; i < first.length; i++) {
+            if (first.charAt(i) !== last.charAt(i)) {
+                break;
+            }
+            prefix += first.charAt(i);
+        }
+        
+        return prefix;
+    }
+
     return (
         <div className="terminal">
             <NavBar
@@ -156,7 +204,9 @@ export const Terminal = () => {
                         onChange={(_) => {}}
                         ignorePrefix
                         value={"help i'm on mobile"}
-                        output={"---\n`426 Upgrade Required`\n\n> Ahhh, yes that's not going to work. \n\nI might support that... but in the meantime, go to [lukeharwood.dev](https://lukeharwood.dev). \n\nOr use something with a keyboard."}
+                        output={
+                            "---\n`426 Upgrade Required`\n\n> Ahhh, yes that's not going to work. \n\nI might support that... but in the meantime, go to [lukeharwood.dev](https://lukeharwood.dev). \n\nOr use something with a keyboard."
+                        }
                         onPreviousCommand={handlePreviousCommand}
                         onNextCommand={handleNextCommand}
                         onSubmit={handleSubmitCommand}
@@ -166,6 +216,7 @@ export const Terminal = () => {
                 <div className="terminal-command-container">
                     {commandBuffer.slice(csp).map((c, i) => (
                         <SingleTerminalCommand
+                            onTabPressed={handleTab}
                             key={i}
                             onChange={handleChange}
                             cwd={c.location}
