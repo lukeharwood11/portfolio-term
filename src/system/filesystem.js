@@ -55,9 +55,12 @@ export class Item {
 }
 
 export class File extends Item {
-    constructor(name, text = "") {
+    constructor(name, text = "", disableAllPermissions = false) {
         super(name, false);
         this.text = text;
+        if (disableAllPermissions) {
+            this.permissions = new Set([]);
+        }
     }
 }
 
@@ -97,14 +100,24 @@ export class FileSystem {
      */
     resolve(startingNode, pathLs) {
         let node = startingNode;
-        console.table({ startingNode, pathLs });
         for (let i = 0; i < pathLs.length; ++i) {
             // search for next node
             const cur = pathLs[i];
             let nextNode;
-            if (cur === ".." || cur === ".") {
-                nextNode =
-                    node.parentDir && cur === ".." ? node.parentDir : node;
+
+            let dotStringCount = 0;
+            for (let j = 0; j < cur.length; ++j) {
+                if (cur[j] === ".") {
+                    dotStringCount++;
+                } else {
+                    break;
+                }
+            }
+            if (dotStringCount === cur.length) {
+                nextNode = node;
+                for (let j = 0; j < dotStringCount-1; ++j) {
+                    nextNode = nextNode.parentDir ? nextNode.parentDir : nextNode;
+                }
             } else {
                 if (cur === "") {
                     nextNode = node;
@@ -131,10 +144,22 @@ export class FileSystem {
         return node;
     }
 
-    getItem(cwd, path) {
+    
+    /**
+     * Retrieves an Item that is mounted in the file system based on the given path.
+     * 
+     * @param {string} cwd - The current working directory.
+     * @param {string} path - The path to the desired item.
+     * @returns {Item} - The item mounted in the file system.
+     * 
+     * @todo This function should be absorbed by the resolve function or vice versa.
+     */
+    getItem(cwd, path=undefined) {
+        if (path === undefined) {
+            path = cwd;
+        }
         // given a path return an Item that is mounted in the file system
         cwd = this.simplifyPath(cwd);
-        console.table({ cwd, path });
         const splitPath = path.split("/");
         let startingNode;
         if (splitPath[0] === "") {

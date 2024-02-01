@@ -1,5 +1,5 @@
-import { File, Directory } from "./filesystem";
-import { Result, ResultStatus, Command, Arg, Flag } from "./bash";
+import { File, Directory } from "../filesystem";
+import { Result, ResultStatus, Command, Arg, Flag } from "../bash";
 
 const flags = [];
 const args = [

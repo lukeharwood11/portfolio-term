@@ -1,4 +1,3 @@
-import { FileSystem } from "./filesystem";
 
 export class Tokens {
     constructor(raw) {
@@ -49,6 +48,7 @@ export class Command {
         this.args = args;
         this.help = help;
         this.kwargs = {};
+        this.alt = alt;
         this.disabled = disabled;
     }
 
@@ -163,6 +163,5 @@ export function tokenize(cmd) {
         res.add(buffer);
     }
 
-    console.table(res)
     return res;
 }

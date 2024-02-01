@@ -46,7 +46,6 @@ export class CdCommand extends Command {
         const pathInput = args.length === 2 ? args[1] : "~"; // default to $HOME
         const item = connection.system.fs.getItem(cwd, pathInput);
 
-        console.table({ pathInput, item });
         // set the cwd
         if (item) {
             if (!item.isDirectory) {

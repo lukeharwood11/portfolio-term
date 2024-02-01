@@ -13,6 +13,7 @@ const LinkComponent = ({ href, children }) => {
 
 export const SingleTerminalCommand = ({
     focus,
+    ignorePrefix,
     onPreviousCommand,
     onNextCommand,
     onChange,
@@ -20,6 +21,7 @@ export const SingleTerminalCommand = ({
     cwd,
     output,
     onSubmit,
+    onTabPressed,
 }) => {
     const id = useId();
     const [caretPos, setCaretPos] = useState(0);
@@ -73,6 +75,10 @@ export const SingleTerminalCommand = ({
             case "Enter":
                 onSubmit();
                 break;
+            case "Tab": 
+                // TOOD: implement tab completion
+                onTabPressed((value) => setCaretPos(value.length));
+                break;
             default:
                 if (e.key.length === 1 && !e.ctrlKey && !e.altKey) {
                     handleAdd(e.key);
@@ -83,7 +89,7 @@ export const SingleTerminalCommand = ({
     };
 
     function escapeHTML(string) {
-        // fun little trick for cleaning html
+        // fun little trick for cleaning html :)
         const element = document.createElement("div");
         element.innerText = string;
         return element.innerHTML;
@@ -126,8 +132,10 @@ export const SingleTerminalCommand = ({
         <div onKeyDown={() => handleKeyDown()} key={id} ref={ref}>
             <div className="terminal-command">
                 <span className="command-prefix">
-                    <span className="user">guest@lukes-portfolio:</span>
-                    <span className="cwd">{cwd}</span>
+                    {
+                        !ignorePrefix &&  <><span className="user">guest@lukes-portfolio:</span>
+                        <span className="cwd">{cwd}</span></>
+                    }
                     <span className="white">$</span>
                 </span>
                 <div ref={terminalInputRef} className="terminal-input"></div>

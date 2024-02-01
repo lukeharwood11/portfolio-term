@@ -55,7 +55,6 @@ export class HelpCommand extends Command {
     getHelpString(system, cmd) {
         // find command in system
         let command;
-        console.log(system);
         for (let i = 0; i < system.commands.length; ++i) {
             const c = system.commands[i];
             if (c.name.trim() === cmd.trim()) {
@@ -78,8 +77,6 @@ export class HelpCommand extends Command {
         if (command.flags.length > 0) {
             res += table;
         }
-
-        console.log(res);
 
         return res;
     }

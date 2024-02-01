@@ -4,7 +4,9 @@ import { ExitCommand } from "./cmds/exit";
 import { HelpCommand } from "./cmds/help";
 import { LsCommand } from "./cmds/ls";
 import { SudoCommand } from "./cmds/sudo";
-import { CatCommand } from "./cat";
+import { CatCommand } from "./cmds/cat";
+import { EchoCommand } from "./cmds/echo";
+import { PwdCommand } from "./cmds/pwd";
 import { FileSystem, Directory, File } from "./filesystem";
 import { notImplemented } from "./bash";
 import { System } from "./system";
@@ -31,23 +33,97 @@ homeDir.addItems([userDir]);
 userDir.addItems([projectDir, aboutDir, experienceDir, contribDir]);
 
 const binDir = new Directory("bin");
-rootDir.addItems([
-    binDir,
-    new Directory("etc"),
-    homeDir,
-    new Directory("opt"),
-    new Directory("tmp"),
-    new Directory("usr"),
-    new Directory("var"),
+const etcDir = new Directory("etc");
+etcDir.addItems([
+    new File("hosts", "127.0.0.1 localhost", false),
+    new File("passwd", "root:x:0:0:root:/root:/bin/bash", false),
+    new File("group", "root:x:0:", false),
+    new File("sudoers", "root ALL=(ALL:ALL) ALL", false),
+    new File("fstab", "/dev/sda1 / ext4 defaults 0 1", false),
+    new File("network", "NETWORKING=yes", false),
+    new File("resolv.conf", "nameserver 8.8.8.8", false),
+    new File("hosts.allow", "sshd: 192.168.0.0/16", false),
+    new File("hosts.deny", "ALL: ALL", false),
+    new File("cron.deny", "", false),
+    new File("cron.allow", "", false),
+    new File("motd", "Welcome to my Linux system!", false),
+    new File("issue", "Welcome to my Linux system!", false),
+    new File("issue.net", "Welcome to my Linux system!", false),
 ]);
 
-console.log(userDir.getAbsolutePath());
+const optDir = new Directory("opt");
+optDir.addItems([
+    new File("java", "", true),
+    new File("nodejs", "", true),
+    new File("python", "", true),
+    new File("ruby", "", true),
+    new File("go", "", true),
+    new File("docker", "", true),
+    new File("mysql", "", true),
+    new File("postgresql", "", true),
+    new File("mongodb", "", true),
+    new File("redis", "", true),
+    new File("nginx", "", true),
+    new File("apache", "", true),
+    new File("tomcat", "", true),
+    new File("git", "", true),
+    new File("vscode", "", true),
+    new File("intellij", "", true),
+    new File("eclipse", "", true),
+    new File("sublime", "", true),
+    new File("vim", "", true),
+    new File("emacs", "", true),
+    new File("php", "", true),
+    new File("rust", "", true),
+    new File("scala", "", true),
+    new File("haskell", "", true),
+    new File("kotlin", "", true),
+    new File("typescript", "", true),
+    new File("flutter", "", true),
+    new File("react", "", true),
+    new File("angular", "", true),
+    new File("vue", "", true),
+    new File("webpack", "", true),
+    new File("babel", "", true),
+    new File("jest", "", true),
+    new File("mocha", "", true),
+    new File("cypress", "", true),
+    new File("eslint", "", true),
+    new File("prettier", "", true),
+    new File("webpack", "", true),
+    new File("babel", "", true),
+    new File("jest", "", true),
+]);
+
+const tmpDir = new Directory("tmp");
+tmpDir.addItems([
+    new File("tempFile1.txt", "This is a temporary file.", false),
+    new File("tempFile2.txt", "This is another temporary file.", false),
+]);
+
+const usrDir = new Directory("usr");
+usrDir.addItems([
+    new File("user1.txt", "This is user 1's file.", false),
+    new File("user2.txt", "This is user 2's file.", false),
+]);
+
+const varDir = new Directory("var");
+varDir.addItems([
+    new File("log.txt", "This is a log file.", false),
+    new File("data.txt", "This is a data file.", false),
+]);
+
+rootDir.addItems([
+    binDir,
+    etcDir,
+    homeDir,
+    optDir,
+    tmpDir,
+    usrDir,
+    varDir,
+]);
 
 const fs = new FileSystem(rootDir, userDir);
-
-console.log(fs.simplifyPath("/home/guest/test/"));
-
-// console.log(rootDir.getAbsolutePath());
 
 const defaultEnvVariables = {
     HOME: "~",
@@ -105,59 +181,7 @@ const defaultEnvVariables = {
 // useradd and usermod - Add new user or change existing users data
 // passwd - Create or update passwords for existing users
 const unimplementedCommands = notImplemented(
-    [
-        "apt-get",
-        "apt",
-        "pwd",
-        "mkdir",
-        "mv",
-        "cp",
-        "rm",
-        "touch",
-        "ln",
-        "echo",
-        "less",
-        "man",
-        "uname",
-        "whoami",
-        "tar",
-        "grep",
-        "head",
-        "tail",
-        "diff",
-        "cmp",
-        "comm",
-        "sort",
-        "export",
-        "zip",
-        "unzip",
-        "ssh",
-        "service",
-        "ps",
-        "kill",
-        "killall",
-        "df",
-        "mount",
-        "chmod",
-        "chown",
-        "ifconfig",
-        "traceroute",
-        "wget",
-        "ufw",
-        "iptables",
-        "pacman",
-        "yum",
-        "rpm",
-        "cal",
-        "alias",
-        "dd",
-        "whereis",
-        "whatis",
-        "top",
-        "useradd",
-        "usermod",
-        "passwd"
-      ]
+    ["apt-get", "apt", "mkdir", "mv", "cp", "rm", "touch", "ln", "less", "man", "uname", "whoami", "tar", "grep", "head", "tail", "diff", "cmp", "comm", "sort", "export", "zip", "unzip", "ssh", "service", "ps", "kill", "killall", "df", "mount", "chmod", "chown", "ifconfig", "traceroute", "wget", "ufw", "iptables", "pacman", "yum", "rpm", "cal", "alias", "dd", "whereis", "whatis", "top", "useradd", "usermod", "passwd"] 
 )
 
 const commands = [
@@ -168,10 +192,11 @@ const commands = [
     new LsCommand(),
     new ClearCommand(),
     new CatCommand(),
+    new EchoCommand(),
+    new PwdCommand(),
     ...unimplementedCommands,
 ];
 
-console.log(binDir)
 binDir.addItems(commands.map((command) => {
     const file = new File(command.name);
     file.setPermissions([]);
