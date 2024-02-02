@@ -101,37 +101,39 @@ export const Terminal = () => {
         }
     }
 
-    function handleSubmitCommand() {
+    async function handleSubmitCommand() {
+        setBlocked(true);
+        const currentBuffer = commandBuffer[commandBuffer.length - 1];
+        let cwd = currentBuffer.location;
+
+        const standardOutput = async (buff) => {
+            return new Promise((resolve) => {
+                setCommandBuffer((prev) => {
+                    resolve();
+                    return [...prev.slice(0, -1), { ...prev[prev.length - 1], output: prev[prev.length - 1].output + buff }];
+                });
+            });
+        };
+
+        const result = await connection.execute(
+            currentBuffer.cmd,
+            standardOutput,
+            cwd,
+            (newCwd) => {
+                cwd = newCwd;
+            },
+            commandBuffer,
+            setCsp
+        );
+
+        await standardOutput(result.out);
         setCommandBuffer((prev) => {
-            let cp = [...prev];
-            // TODO: move stdOut outside of updating state so that any stdOut(s) don't get 'flushed' at the end of the command.
-            const stdOut = (buffer) => {
-                cp[cp.length - 1].output += `${buffer}\n\n`;
-            };
-
-            let cwd = cp[cp.length - 1].location;
-
-            const result = connection.execute(
-                cp[cp.length - 1].cmd,
-                stdOut,
-                cwd,
-                (newCwd) => {
-                    cwd = newCwd;
-                },
-                cp,
-                setCsp
-            );
-
-            stdOut(result.out);
-            // TODO: remove
-            // execute command, when done add another command, set the cbIndex to 1 and continue
+            const cp = [...prev];
             cp.push(new Command(cwd));
-            // reset the 'previous commands' feature
-            setCbIndex(1);
             return cp;
-        });
-        // TODO: add the commmand to the visible buffer
-        // TODO: use the bash engine to run the command and set the command output
+        }); 
+        setCbIndex(1);
+        setBlocked(false);
     }
 
     function handleChange(newValue) {
@@ -224,7 +226,7 @@ export const Terminal = () => {
                             cwd={c.location}
                             value={c.cmd}
                             output={c.output}
-                            focus={i + csp === commandBuffer.length - 1}
+                            focus={i + csp === commandBuffer.length - 1 && !blocked}
                             onPreviousCommand={handlePreviousCommand}
                             onNextCommand={handleNextCommand}
                             onSubmit={handleSubmitCommand}

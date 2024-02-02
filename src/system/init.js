@@ -16,6 +16,8 @@ import { aboutDir } from "./init/about";
 import { experienceDir } from './init/experience';
 import { contribDir } from './init/contributions'
 import { RmCommand } from "./cmds/rm";
+import { MkdirCommand } from "./cmds/mkdir";
+import { GitCommand } from "./cmds/git";
 
 // configure our fake system
 const rootDir = new Directory("");
@@ -31,7 +33,9 @@ const rootDir = new Directory("");
 
 const homeDir = new Directory("home");
 const userDir = new Directory("guest");
+userDir.protected = true;
 homeDir.addItems([userDir]);
+homeDir.protected = true;
 userDir.addItems([projectDir, aboutDir, experienceDir, contribDir]);
 
 const binDir = new Directory("bin");
@@ -125,6 +129,15 @@ rootDir.addItems([
     varDir,
 ]);
 
+rootDir.protected = true;
+binDir.protected = true;
+etcDir.protected = true;
+homeDir.protected = true;
+optDir.protected = true;
+tmpDir.protected = true;
+usrDir.protected = true;
+varDir.protected = true;
+
 const fs = new FileSystem(rootDir, userDir);
 
 const defaultEnvVariables = {
@@ -182,9 +195,15 @@ const defaultEnvVariables = {
 // top - View active processes live with their system usage
 // useradd and usermod - Add new user or change existing users data
 // passwd - Create or update passwords for existing users
-const unimplementedCommands = notImplemented(
-    ["apt-get", "apt", "mkdir", "mv", "cp", "rm", "touch", "ln", "less", "man", "uname", "whoami", "tar", "grep", "head", "tail", "diff", "cmp", "comm", "sort", "export", "zip", "unzip", "ssh", "service", "ps", "kill", "killall", "df", "mount", "chmod", "chown", "ifconfig", "traceroute", "wget", "ufw", "iptables", "pacman", "yum", "rpm", "cal", "alias", "dd", "whereis", "whatis", "top", "useradd", "usermod", "passwd"] 
-)
+const unimplementedCommands = notImplemented([
+    "apt-get", "apt", "mkdir", "mv", "cp", "ln", "less", 
+    "man", "uname", "whoami", "tar", "grep", "head", "tail", "diff", 
+    "cmp", "comm", "sort", "export", "zip", "unzip", "ssh", "service", 
+    "ps", "kill", "killall", "df", "mount", "chmod", "chown", "ifconfig", 
+    "traceroute", "wget", "ufw", "iptables", "pacman", "yum", "rpm", 
+    "cal", "alias", "dd", "whereis", "whatis", "top", "useradd", 
+    "usermod", "passwd"
+]);
 
 const commands = [
     new CdCommand(),
@@ -198,6 +217,8 @@ const commands = [
     new PwdCommand(),
     new TouchCommand(), 
     new RmCommand(),
+    new MkdirCommand(),
+    new GitCommand(),
     ...unimplementedCommands,
 ];
 
