@@ -193,9 +193,15 @@ const defaultEnvVariables = {
 // top - View active processes live with their system usage
 // useradd and usermod - Add new user or change existing users data
 // passwd - Create or update passwords for existing users
-const unimplementedCommands = notImplemented(
-    ["apt-get", "apt", "mkdir", "mv", "cp", "rm", "touch", "ln", "less", "man", "uname", "whoami", "tar", "grep", "head", "tail", "diff", "cmp", "comm", "sort", "export", "zip", "unzip", "ssh", "service", "ps", "kill", "killall", "df", "mount", "chmod", "chown", "ifconfig", "traceroute", "wget", "ufw", "iptables", "pacman", "yum", "rpm", "cal", "alias", "dd", "whereis", "whatis", "top", "useradd", "usermod", "passwd"] 
-)
+const unimplementedCommands = notImplemented([
+    "apt-get", "apt", "mkdir", "mv", "cp", "ln", "less", 
+    "man", "uname", "whoami", "tar", "grep", "head", "tail", "diff", 
+    "cmp", "comm", "sort", "export", "zip", "unzip", "ssh", "service", 
+    "ps", "kill", "killall", "df", "mount", "chmod", "chown", "ifconfig", 
+    "traceroute", "wget", "ufw", "iptables", "pacman", "yum", "rpm", 
+    "cal", "alias", "dd", "whereis", "whatis", "top", "useradd", 
+    "usermod", "passwd"
+]);
 
 const commands = [
     new CdCommand(),
