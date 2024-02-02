@@ -17,6 +17,7 @@ import { experienceDir } from './init/experience';
 import { contribDir } from './init/contributions'
 import { RmCommand } from "./cmds/rm";
 import { MkdirCommand } from "./cmds/mkdir";
+import { GitCommand } from "./cmds/git";
 
 // configure our fake system
 const rootDir = new Directory("");
@@ -216,6 +217,7 @@ const commands = [
     new TouchCommand(), 
     new RmCommand(),
     new MkdirCommand(),
+    new GitCommand(),
     ...unimplementedCommands,
 ];
 
