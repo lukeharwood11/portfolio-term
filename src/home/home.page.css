@@ -100,3 +100,10 @@ p {
     color: white;
     white-space: pre-wrap;
 }
+
+.os-main {
+    display: flex;
+    height: 100%;
+    width: 100%;
+    /* background-color: blue; */
+}

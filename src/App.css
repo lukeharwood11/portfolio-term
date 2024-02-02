@@ -32,6 +32,12 @@ body {
     justify-content: center;
     align-items: center;
     color: white;
+    padding-block: 1px;
+    padding-inline: 6px;
+    box-sizing: border-box;
+    margin: 0em;
+    width: 37px;
+    height: 30px;
 }
 
 .cmd-btn:hover {

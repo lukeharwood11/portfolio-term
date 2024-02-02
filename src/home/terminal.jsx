@@ -8,18 +8,19 @@ import {
     MdMinimize,
     MdClose,
 } from "react-icons/md";
+import { VscGithubInverted } from "react-icons/vsc";
 import { SingleTerminalCommand } from "./command-component";
 import { system } from "../system/init";
 import { SystemConnection } from "../system/system";
 import { isMobile } from "react-device-detect";
 
-const NavBar = ({ cwd }) => {
+const NavBar = ({ cwd, onMinimize }) => {
     return (
         <div className="nav-bar">
             <div className="left-command-bar">
-                <button className="cmd-btn">
-                    <MdOutlineTerminal size={25} />
-                </button>
+                <a href="https://github.com/lukeharwood11/portfolio-term" target="_blank" className="cmd-btn">
+                    <VscGithubInverted size={25} />
+                </a>
             </div>
             <div className="middle-bar">guest@lukes-portfolio: {cwd}</div>
             <div className="right-command-bar">
@@ -31,7 +32,7 @@ const NavBar = ({ cwd }) => {
                         <button className="cmd-btn">
                             <MdMenu size={25} />
                         </button>
-                        <button className="circle-cmd-btn">
+                        <button onClick={onMinimize} className="circle-cmd-btn">
                             <MdMinimize size={15} />
                         </button>
                     </>
@@ -60,7 +61,7 @@ class Command {
     }
 }
 
-export const Terminal = () => {
+export const Terminal = ({ onMinimize }) => {
     // command buffer should contain three things:
     // the command
     // the output
@@ -196,6 +197,7 @@ export const Terminal = () => {
     return (
         <div className="terminal">
             <NavBar
+                onMinimize={onMinimize}
                 cwd={
                     commandBuffer.length > 0
                         ? commandBuffer[commandBuffer.length - 1].location
