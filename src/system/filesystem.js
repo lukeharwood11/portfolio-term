@@ -10,6 +10,7 @@ export class Item {
         this.isDirectory = isDirectory;
         this.permissions = new Set([Permissions.READ]);
         this.parentDir = undefined;
+        this.protected = false;
     }
 
     setPermissions(permissions) {

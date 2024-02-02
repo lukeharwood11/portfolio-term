@@ -28,6 +28,7 @@ export class RmCommand extends Command {
                 ResultStatus.IMPROPER_COMMAND
             );
         }
+        const cwd = connection.system.fs.getItem(connection.cwd);
         for (let i = 1; i < arg.length; i++) {
             const path = arg[i];
             const node = connection.system.fs.getItem(connection.cwd, path);
@@ -43,7 +44,14 @@ export class RmCommand extends Command {
                     ResultStatus.IMPROPER_COMMAND
                 );
             }
-            console.log(node);
+            console.log(node)
+            if (node.protected || cwd.getAbsolutePath().startsWith(node.getAbsolutePath())) {
+                return new Result(
+                    `rm: ${path}: Permission denied`,
+                    ResultStatus.IMPROPER_COMMAND
+                );
+            }
+
             node.parentDir.items = node.parentDir.items.filter(item => item !== node);
         }
         return new Result();

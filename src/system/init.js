@@ -32,6 +32,7 @@ const rootDir = new Directory("");
 const homeDir = new Directory("home");
 const userDir = new Directory("guest");
 homeDir.addItems([userDir]);
+homeDir.protected = true;
 userDir.addItems([projectDir, aboutDir, experienceDir, contribDir]);
 
 const binDir = new Directory("bin");
@@ -124,6 +125,15 @@ rootDir.addItems([
     usrDir,
     varDir,
 ]);
+
+rootDir.protected = true;
+binDir.protected = true;
+etcDir.protected = true;
+homeDir.protected = true;
+optDir.protected = true;
+tmpDir.protected = true;
+usrDir.protected = true;
+varDir.protected = true;
 
 const fs = new FileSystem(rootDir, userDir);
 
