@@ -17,6 +17,17 @@ If you see a command that hasn't been implemented yet, or you see a way this pro
 
 CI/CD is configured to deploy to staging when a pull request is created, and deploy to production when PRs are approved and merged.
 
+### Getting Started
+> Ensure that npm is installed on the system. ([Installing npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm))
+
+1. Clone the Repository
+2. `cd` into the repo, and run `npm install`
+3. Run `npm start` to start the development server
+
+### Building
+Run `npm ci && npm run build` to build the application for production.
+You can then start a webserver and serve the `build` directory to view the app as it will be deployed.
+
 ### Ideas to expand `PTerm`
 
 - [ ] Add easter eggs throughout system
@@ -24,3 +35,4 @@ CI/CD is configured to deploy to staging when a pull request is created, and dep
 - [ ] Persist a session to local storage, so that changes to the system kept
 - [ ] Add complexity to the bash parser to support piping and asychronous tasks
 - [ ] Add autocomplete suggestions
+- [ ] Add a text editor
