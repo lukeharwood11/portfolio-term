@@ -93,10 +93,6 @@ export class FileSystem {
         return path;
     }
 
-    partialResolve(startingNode, pathLs) {
-        // given a path return an Item that is mounted in the file system along with the path that was not resolved.
-    }
-
     /**
      * @param {Array} pathLs
      * @param {boolean} absolute (default = true)
