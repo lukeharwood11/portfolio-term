@@ -13,7 +13,7 @@ export const HomePage = () => {
 			{
 				!visible && (
 					<div className="os-main">
-						<iframe width={"100%"} height={"100%"} src="http://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=1&enablejsapi=1" allow="autoplay"></iframe>	
+						<iframe width={"100%"} height={"100%"} src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=1&enablejsapi=1" allow="autoplay"></iframe>	
 					</div>
 				)
 			}
