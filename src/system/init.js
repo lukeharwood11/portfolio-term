@@ -33,6 +33,7 @@ const rootDir = new Directory("");
 
 const homeDir = new Directory("home");
 const userDir = new Directory("guest");
+userDir.protected = true;
 homeDir.addItems([userDir]);
 homeDir.protected = true;
 userDir.addItems([projectDir, aboutDir, experienceDir, contribDir]);
