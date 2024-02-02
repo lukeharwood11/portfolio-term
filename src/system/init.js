@@ -7,6 +7,7 @@ import { SudoCommand } from "./cmds/sudo";
 import { CatCommand } from "./cmds/cat";
 import { EchoCommand } from "./cmds/echo";
 import { PwdCommand } from "./cmds/pwd";
+import { TouchCommand } from "./cmds/touch";
 import { FileSystem, Directory, File } from "./filesystem";
 import { notImplemented } from "./bash";
 import { System } from "./system";
@@ -14,6 +15,7 @@ import { projectDir } from './init/projects';
 import { aboutDir } from "./init/about";
 import { experienceDir } from './init/experience';
 import { contribDir } from './init/contributions'
+import { RmCommand } from "./cmds/rm";
 
 // configure our fake system
 const rootDir = new Directory("");
@@ -194,6 +196,8 @@ const commands = [
     new CatCommand(),
     new EchoCommand(),
     new PwdCommand(),
+    new TouchCommand(), 
+    new RmCommand(),
     ...unimplementedCommands,
 ];
 

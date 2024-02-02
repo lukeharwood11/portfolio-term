@@ -57,12 +57,12 @@ export class CdCommand extends Command {
             connection.setCwd(
                 connection.system.fs.simplifyPath(item.getAbsolutePath())
             );
-            } else {
-                return new Result(
-                    `bash: cd: ${pathInput}: No such file or directory`,
-                    ResultStatus.IMPROPER_COMMAND
-                );
-            }
+        } else {
+            return new Result(
+                `bash: cd: ${pathInput}: No such file or directory`,
+                ResultStatus.IMPROPER_COMMAND
+            );
+        }
         return new Result();
     }
 }

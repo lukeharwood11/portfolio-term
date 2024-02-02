@@ -40,7 +40,7 @@
     color: white;
 }
 
-.terminal-output > * > img {
+.terminal-output  img {
     width: 50px;
     height: 50px;
     border-radius: 50%;
@@ -48,7 +48,7 @@
     margin: .2rem .5rem;
 }
 
-.terminal-output > p {
+.terminal-output p {
     margin: .2rem 0;
 }
 
@@ -60,6 +60,10 @@ a:visited {
     color: white;
 }
 
+td {
+    padding: 0 .25rem;
+}
+
 .terminal-output > a:not-v
 
 p {
@@ -67,7 +71,7 @@ p {
     margin: 0;
 }
 
-.terminal-output > * > code {
+.terminal-output  code {
     color: white;
     background-color: rgb(30, 30, 50);
     border-radius: 0.3rem;

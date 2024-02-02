@@ -44,11 +44,11 @@ export class HelpCommand extends Command {
 
     getExampleString(command) {
         return `${command.disabled ? '(*) ' : ''}${command.name}: \`${command.name}${
-            command.flags.length > 0 ? " [...options]" : ""
-        }${
             command.args.length > 0
                 ? " " + command.args.map((a) => `[${a.name}]`).join(", ")
                 : ""
+        }${
+            command.flags.length > 0 ? " [...options]" : ""
         }\``;
     }
 
@@ -71,7 +71,7 @@ export class HelpCommand extends Command {
         let table = "\n\n|**Options**||\n|--|--|\n";
         for (let i = 0; i < command.flags.length; ++i) {
             const flag = command.flags[i];
-            table += `|${flag.name}|${flag.help ? flag.help : ""}|\n`;
+            table += `|\`--${flag.name} ${flag.alias ? '(-'+flag.alias+')': ''}\`|${flag.help ? flag.help : ""}|\n`;
         }
 
         if (command.flags.length > 0) {
