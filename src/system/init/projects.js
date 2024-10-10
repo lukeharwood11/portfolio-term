@@ -81,7 +81,7 @@ Same applies to building a custom vehicle from \`vehicle.py\` or using the \`Def
 
 **Luke Harwood** 
 
-- Email: lukeharwood11@gmail.com
+- Email: lukeharwood.dev@gmail.com
 - University Email: harwoodl@msoe.edu
 - Website: [www.lukeharwood.dev](https://www.lukeharwood.dev)
 
